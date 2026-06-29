@@ -17,7 +17,7 @@
         theme: 'darker'
     };
 
-    // SVG Icons - Removido o ícone code
+    // SVG Icons
     const icons = {
         close: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
         minimize: `<svg width="14" height="2" viewBox="0 0 14 2" fill="none"><path d="M1 1H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
@@ -31,32 +31,21 @@
         dropdown: `<svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
         history: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 4V8L10.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
         warning: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L18 18H2L10 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="10" y1="8" x2="10" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="15" r="0.5" fill="currentColor"/></svg>`,
-        // Novos ícones para indicar estados
-        toggleOn: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="8" cy="8" r="3" fill="currentColor"/></svg>`,
-        toggleOff: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>`,
         enabled: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5" fill="currentColor"/></svg>`,
         disabled: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>`
     };
 
+    // Import Poppins font
+    const fontLink = document.createElement('link');
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap';
+    fontLink.rel = 'stylesheet';
+    document.head.appendChild(fontLink);
+
     // Darker Theme Styles
     const style = document.createElement('style');
     style.textContent = `
-        :root {
-            --menu-bg: #000000;
-            --menu-surface: #0a0a0a;
-            --menu-border: #1a1a1a;
-            --menu-text: #e0e0e0;
-            --menu-text-secondary: #666666;
-            --menu-accent: #4a4a4a;
-            --menu-accent-hover: #666666;
-            --menu-danger: #cc0000;
-            --menu-success: #006600;
-            --menu-warning: #664400;
-            --menu-glow: 0 0 20px rgba(0,0,0,0.9);
-            --menu-font: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-            --menu-mono: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
-            --menu-input-bg: #000000;
-            --menu-hover: #0d0d0d;
+        * {
+            font-family: 'Poppins', sans-serif !important;
         }
 
         #aiCodeMenu * {
@@ -79,8 +68,8 @@
             max-width: 520px;
             width: 95%;
             z-index: 999999;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.9);
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            font-family: 'Poppins', sans-serif !important;
             font-size: 13px;
             color: #e0e0e0;
             user-select: none;
@@ -104,7 +93,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.8);
             z-index: 999998;
             animation: fadeIn 0.2s ease;
         }
@@ -181,12 +170,20 @@
         }
 
         #aiCodeMenu .header .title {
-            color: #e0e0e0;
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 3px;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
             text-transform: uppercase;
             text-align: right;
+        }
+
+        #aiCodeMenu .header .title .ai-text {
+            color: #888888;
+        }
+
+        #aiCodeMenu .header .title .code-text {
+            color: #ffffff;
+            font-weight: 700;
         }
 
         #aiCodeMenu .tabs-container {
@@ -203,7 +200,7 @@
             color: #666666;
             cursor: pointer;
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 1px;
             background: transparent;
@@ -214,7 +211,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Poppins', sans-serif !important;
         }
 
         #aiCodeMenu .tabs-container .tab svg {
@@ -292,7 +289,7 @@
         #aiCodeMenu .section-title {
             color: #666666;
             font-size: 10px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             margin-bottom: 12px;
@@ -354,7 +351,7 @@
         #aiCodeMenu .option-item .option-indicator.active {
             background: rgba(136,136,136,0.1);
             border-color: #444444;
-            box-shadow: 0 0 8px rgba(0,0,0,0.5);
+            box-shadow: 0 0 4px rgba(0,0,0,0.3);
         }
 
         #aiCodeMenu .option-item .option-indicator.active svg {
@@ -373,7 +370,7 @@
         #aiCodeMenu .option-label {
             color: #e0e0e0;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -385,11 +382,12 @@
             font-size: 10px;
             margin-top: 3px;
             line-height: 1.3;
+            font-weight: 400;
         }
 
         #aiCodeMenu .option-status {
             font-size: 9px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
             padding: 3px 8px;
@@ -451,7 +449,7 @@
         #aiCodeMenu .toggle-switch input:checked + .switch-slider {
             background: #333333;
             border-color: #444444;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            box-shadow: 0 0 4px rgba(0,0,0,0.3);
         }
 
         #aiCodeMenu .toggle-switch input:checked + .switch-slider::before {
@@ -482,6 +480,7 @@
             border: 1px solid #1a1a1a;
             border-radius: 4px;
             font-size: 12px;
+            font-weight: 400;
             outline: none;
             cursor: pointer;
             appearance: none;
@@ -490,7 +489,7 @@
             background-repeat: no-repeat;
             background-position: right 12px center;
             padding-right: 32px;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Poppins', sans-serif !important;
             transition: all 0.2s ease;
         }
 
@@ -501,12 +500,13 @@
 
         #aiCodeMenu .select-wrapper select:focus {
             border-color: #444444;
-            box-shadow: 0 0 0 3px rgba(255,255,255,0.03);
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.02);
         }
 
         #aiCodeMenu .select-wrapper select option {
             background: #000000;
             color: #e0e0e0;
+            font-family: 'Poppins', sans-serif !important;
         }
 
         #aiCodeMenu .code-editor {
@@ -520,7 +520,7 @@
 
         #aiCodeMenu .code-editor:focus-within {
             border-color: #444444;
-            box-shadow: 0 0 0 3px rgba(255,255,255,0.03);
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.02);
         }
 
         #aiCodeMenu .code-editor .editor-header {
@@ -544,7 +544,7 @@
             color: #e0e0e0;
             border: none;
             padding: 16px;
-            font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+            font-family: 'Courier New', monospace !important;
             font-size: 13px;
             resize: vertical;
             outline: none;
@@ -552,10 +552,12 @@
             tab-size: 2;
             position: relative;
             z-index: 2;
+            font-weight: 400;
         }
 
         #aiCodeMenu .code-editor textarea::placeholder {
             color: rgba(255,255,255,0.05);
+            font-family: 'Poppins', sans-serif !important;
         }
 
         #aiCodeMenu .button-group {
@@ -573,11 +575,11 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 500;
             transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Poppins', sans-serif !important;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -598,13 +600,13 @@
             background: #1a1a1a;
             border-color: #333333;
             color: #ffffff;
-            font-weight: 700;
+            font-weight: 600;
         }
 
         #aiCodeMenu .button-group button.btn-primary:hover {
             background: #2a2a2a;
             border-color: #444444;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         #aiCodeMenu .button-group button.btn-danger {
@@ -633,7 +635,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.85);
             z-index: 1000000;
             display: flex;
             align-items: center;
@@ -648,7 +650,7 @@
             padding: 24px;
             max-width: 400px;
             width: 90%;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.9);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             animation: modalSlideIn 0.2s ease;
         }
 
@@ -668,7 +670,7 @@
 
         #aiCodeMenu .modal .modal-title {
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 600;
             color: #e0e0e0;
         }
 
@@ -677,6 +679,7 @@
             font-size: 12px;
             line-height: 1.6;
             margin-bottom: 20px;
+            font-weight: 400;
         }
 
         #aiCodeMenu .modal .modal-body .code-block {
@@ -685,7 +688,7 @@
             border-radius: 4px;
             padding: 12px;
             margin: 12px 0;
-            font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+            font-family: 'Courier New', monospace !important;
             font-size: 12px;
             max-height: 200px;
             overflow-y: auto;
@@ -704,17 +707,17 @@
             border-radius: 4px;
             color: #ffffff;
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Poppins', sans-serif !important;
         }
 
         #aiCodeMenu .modal .modal-footer button:hover {
             background: #2a2a2a;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         #aiCodeMenu .history-list {
@@ -736,6 +739,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            font-weight: 400;
         }
 
         #aiCodeMenu .history-item:hover {
@@ -744,7 +748,7 @@
         }
 
         #aiCodeMenu .history-item .history-code {
-            font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+            font-family: 'Courier New', monospace !important;
             max-width: 300px;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -754,6 +758,7 @@
         #aiCodeMenu .history-item .history-time {
             color: #666666;
             font-size: 10px;
+            font-weight: 400;
         }
 
         @media (max-width: 480px) {
@@ -783,7 +788,7 @@
     const menu = document.createElement('div');
     menu.id = 'aiCodeMenu';
 
-    // Header - Modificado para remover ícone e versão, título à direita
+    // Header - Título com AI cinza e CODE branco
     const header = document.createElement('div');
     header.className = 'header';
     header.innerHTML = `
@@ -793,7 +798,9 @@
             <button class="btn-maximize" id="btnMaximize" title="Maximize">${icons.maximize}</button>
         </div>
         <div class="title-section">
-            <div class="title">AiCode</div>
+            <div class="title">
+                <span class="ai-text">Ai</span><span class="code-text">Code</span>
+            </div>
         </div>
     `;
 
@@ -820,23 +827,6 @@
     content.className = 'content';
 
     // Função para atualizar indicadores visuais das opções
-    function updateOptionIndicators() {
-        // Atualizar Allow Paste
-        updateOptionUI('togglePaste', state.allowPaste, 
-            'Paste operations enabled', 
-            'Paste operations disabled');
-        
-        // Atualizar Text Input
-        updateOptionUI('toggleText', state.textInput, 
-            'Text input mode active', 
-            'Text input mode inactive');
-        
-        // Atualizar Auto Execution
-        updateOptionUI('toggleAuto', state.autoType, 
-            'Auto execution enabled', 
-            'Auto execution disabled');
-    }
-
     function updateOptionUI(toggleId, isActive, activeText, inactiveText) {
         const optionItem = document.getElementById(toggleId).closest('.option-item');
         if (!optionItem) return;
@@ -860,7 +850,7 @@
         }
     }
 
-    // General Tab - Modificado com indicadores visuais mais claros
+    // General Tab
     const generalContent = document.createElement('div');
     generalContent.className = 'tab-content active';
     generalContent.dataset.tab = 'general';
@@ -1346,8 +1336,6 @@
     document.addEventListener('touchend', stopDrag);
 
     // Initial state
-    updateOptionIndicators();
-    
     if (!state.allowPaste) {
         const pasteBtn = document.getElementById('pasteBtn');
         pasteBtn.disabled = true;
@@ -1358,5 +1346,5 @@
     // Initialize history
     updateHistoryTab();
 
-    console.log('AiCode - Dark Theme Initialized');
+    console.log('AiCode Initialized');
 })();
