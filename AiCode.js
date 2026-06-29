@@ -171,7 +171,7 @@
 
         #aiCodeMenu .header .title {
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 400;
             letter-spacing: 2px;
             text-transform: uppercase;
             text-align: right;
@@ -183,7 +183,7 @@
 
         #aiCodeMenu .header .title .code-text {
             color: #ffffff;
-            font-weight: 700;
+            font-weight: 400;
         }
 
         #aiCodeMenu .tabs-container {
@@ -335,34 +335,6 @@
             flex: 1;
         }
 
-        #aiCodeMenu .option-item .option-indicator {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid #1a1a1a;
-            flex-shrink: 0;
-            transition: all 0.3s ease;
-        }
-
-        #aiCodeMenu .option-item .option-indicator.active {
-            background: rgba(136,136,136,0.1);
-            border-color: #444444;
-            box-shadow: 0 0 4px rgba(0,0,0,0.3);
-        }
-
-        #aiCodeMenu .option-item .option-indicator.active svg {
-            color: #888888;
-        }
-
-        #aiCodeMenu .option-item .option-indicator svg {
-            color: #444444;
-            transition: all 0.3s ease;
-        }
-
         #aiCodeMenu .option-item .option-info {
             flex: 1;
         }
@@ -383,27 +355,6 @@
             margin-top: 3px;
             line-height: 1.3;
             font-weight: 400;
-        }
-
-        #aiCodeMenu .option-status {
-            font-size: 9px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 3px 8px;
-            border-radius: 3px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid #1a1a1a;
-            color: #444444;
-            transition: all 0.3s ease;
-            min-width: 60px;
-            text-align: center;
-        }
-
-        #aiCodeMenu .option-status.active {
-            color: #888888;
-            background: rgba(136,136,136,0.05);
-            border-color: #333333;
         }
 
         #aiCodeMenu .toggle-switch {
@@ -788,7 +739,7 @@
     const menu = document.createElement('div');
     menu.id = 'aiCodeMenu';
 
-    // Header - Título com AI cinza e CODE branco
+    // Header
     const header = document.createElement('div');
     header.className = 'header';
     header.innerHTML = `
@@ -826,30 +777,6 @@
     const content = document.createElement('div');
     content.className = 'content';
 
-    // Função para atualizar indicadores visuais das opções
-    function updateOptionUI(toggleId, isActive, activeText, inactiveText) {
-        const optionItem = document.getElementById(toggleId).closest('.option-item');
-        if (!optionItem) return;
-        
-        const indicator = optionItem.querySelector('.option-indicator');
-        const status = optionItem.querySelector('.option-status');
-        const description = optionItem.querySelector('.option-description');
-        
-        if (indicator) {
-            indicator.className = 'option-indicator' + (isActive ? ' active' : '');
-            indicator.innerHTML = isActive ? icons.enabled : icons.disabled;
-        }
-        
-        if (status) {
-            status.className = 'option-status' + (isActive ? ' active' : '');
-            status.textContent = isActive ? 'ACTIVE' : 'INACTIVE';
-        }
-        
-        if (description) {
-            description.textContent = isActive ? activeText : inactiveText;
-        }
-    }
-
     // General Tab
     const generalContent = document.createElement('div');
     generalContent.className = 'tab-content active';
@@ -861,16 +788,10 @@
                 Input Configuration
             </div>
             <div class="option-group">
-                <div class="option-item" id="optionPaste">
+                <div class="option-item">
                     <div class="option-left">
-                        <div class="option-indicator ${state.allowPaste ? 'active' : ''}">
-                            ${state.allowPaste ? icons.enabled : icons.disabled}
-                        </div>
                         <div class="option-info">
-                            <div class="option-label">
-                                Allow Paste
-                                <span class="option-status ${state.allowPaste ? 'active' : ''}">${state.allowPaste ? 'ACTIVE' : 'INACTIVE'}</span>
-                            </div>
+                            <div class="option-label">Allow Paste</div>
                             <div class="option-description">${state.allowPaste ? 'Paste operations enabled' : 'Paste operations disabled'}</div>
                         </div>
                     </div>
@@ -879,16 +800,10 @@
                         <span class="switch-slider"></span>
                     </label>
                 </div>
-                <div class="option-item" id="optionText">
+                <div class="option-item">
                     <div class="option-left">
-                        <div class="option-indicator ${state.textInput ? 'active' : ''}">
-                            ${state.textInput ? icons.enabled : icons.disabled}
-                        </div>
                         <div class="option-info">
-                            <div class="option-label">
-                                Text Input Mode
-                                <span class="option-status ${state.textInput ? 'active' : ''}">${state.textInput ? 'ACTIVE' : 'INACTIVE'}</span>
-                            </div>
+                            <div class="option-label">Text Input Mode</div>
                             <div class="option-description">${state.textInput ? 'Text input mode active' : 'Text input mode inactive'}</div>
                         </div>
                     </div>
@@ -897,16 +812,10 @@
                         <span class="switch-slider"></span>
                     </label>
                 </div>
-                <div class="option-item" id="optionAuto">
+                <div class="option-item">
                     <div class="option-left">
-                        <div class="option-indicator ${state.autoType ? 'active' : ''}">
-                            ${state.autoType ? icons.enabled : icons.disabled}
-                        </div>
                         <div class="option-info">
-                            <div class="option-label">
-                                Auto Execution
-                                <span class="option-status ${state.autoType ? 'active' : ''}">${state.autoType ? 'ACTIVE' : 'INACTIVE'}</span>
-                            </div>
+                            <div class="option-label">Auto Execution</div>
                             <div class="option-description">${state.autoType ? 'Auto execution enabled' : 'Auto execution disabled'}</div>
                         </div>
                     </div>
@@ -1078,7 +987,6 @@
             </div>
         `).join('');
 
-        // Click to load history
         historyList.querySelectorAll('.history-item').forEach(item => {
             item.onclick = function() {
                 const index = this.dataset.index;
@@ -1110,7 +1018,6 @@
         }
     }
 
-    // Load saved state
     loadState();
 
     // Event Handlers
@@ -1146,7 +1053,6 @@
         document.getElementById('btnClose').onclick();
     };
 
-    // Tab switching
     document.querySelectorAll('#aiCodeMenu .tab').forEach(tab => {
         tab.onclick = () => switchTab(tab.dataset.tab);
     });
@@ -1168,17 +1074,15 @@
             pasteBtn.style.opacity = '1';
             pasteBtn.style.cursor = 'pointer';
         }
-        updateOptionUI('togglePaste', state.allowPaste, 
-            'Paste operations enabled', 
-            'Paste operations disabled');
+        const desc = this.closest('.option-item').querySelector('.option-description');
+        if (desc) desc.textContent = this.checked ? 'Paste operations enabled' : 'Paste operations disabled';
         saveState();
     });
 
     toggleText.addEventListener('change', function() {
         state.textInput = this.checked;
-        updateOptionUI('toggleText', state.textInput, 
-            'Text input mode active', 
-            'Text input mode inactive');
+        const desc = this.closest('.option-item').querySelector('.option-description');
+        if (desc) desc.textContent = this.checked ? 'Text input mode active' : 'Text input mode inactive';
         saveState();
     });
 
@@ -1188,13 +1092,11 @@
             state.method = 'auto';
             document.getElementById('methodSelect').value = 'auto';
         }
-        updateOptionUI('toggleAuto', state.autoType, 
-            'Auto execution enabled', 
-            'Auto execution disabled');
+        const desc = this.closest('.option-item').querySelector('.option-description');
+        if (desc) desc.textContent = this.checked ? 'Auto execution enabled' : 'Auto execution disabled';
         saveState();
     });
 
-    // Make entire option item clickable
     document.querySelectorAll('.option-item').forEach(item => {
         item.onclick = function(e) {
             if (e.target.tagName !== 'INPUT') {
@@ -1207,13 +1109,11 @@
         };
     });
 
-    // Method selector
     document.getElementById('methodSelect').addEventListener('change', function() {
         state.method = this.value;
         saveState();
     });
 
-    // Executor handlers
     const textarea = document.getElementById('executorText');
     
     document.getElementById('clearBtn').addEventListener('click', () => {
@@ -1249,14 +1149,12 @@
             return;
         }
         
-        // Add to history
         state.history.unshift({
             code: code,
             timestamp: new Date().toISOString(),
             method: state.method
         });
         
-        // Keep only last 50 entries
         if (state.history.length > 50) {
             state.history = state.history.slice(0, 50);
         }
@@ -1272,7 +1170,6 @@
         );
     });
 
-    // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.key === 'Enter' && document.activeElement === textarea) {
             e.preventDefault();
@@ -1343,22 +1240,6 @@
         pasteBtn.style.cursor = 'not-allowed';
     }
 
-    if (!state.textInput) {
-        const pasteBtn = document.getElementById('pasteBtn');
-        pasteBtn.disabled = true;
-        pasteBtn.style.opacity = '0.4';
-        pasteBtn.style.cursor = 'not-allowed';
-    }
-
-    if (!state.autoType) {
-        const pasteBtn = document.getElementById('pasteBtn');
-        pasteBtn.disabled = true;
-        pasteBtn.style.opacity = '0.4';
-        pasteBtn.style.cursor = 'not-allowed';
-    }
-
-
-    // Initialize history
     updateHistoryTab();
 
     console.log('AiCode Initialized');
