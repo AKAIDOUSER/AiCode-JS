@@ -78,13 +78,26 @@
             flex-direction: column;
             transition: box-shadow 0.3s ease, opacity 0.2s ease;
             letter-spacing: 0.01em;
+            padding: 0 8px;
         }
 
         #aiCodeMenu.minimized {
-            min-width: 440px;
-            max-width: 520px;
+            min-width: unset;
+            max-width: unset;
+            width: auto;
             max-height: 48px;
             overflow: hidden;
+            padding: 0 8px;
+        }
+
+        #aiCodeMenu.minimized .header {
+            border-radius: 8px;
+        }
+
+        #aiCodeMenu.minimized .title-section,
+        #aiCodeMenu.minimized .tabs-container,
+        #aiCodeMenu.minimized .content {
+            display: none;
         }
 
         #aiCodeMenu .overlay {
@@ -111,13 +124,18 @@
         #aiCodeMenu .header {
             display: flex;
             align-items: center;
-            padding: 12px 16px;
+            padding: 12px 8px;
             background: #0a0a0a;
             border-bottom: 1px solid #1a1a1a;
             border-radius: 8px 8px 0 0;
             flex-shrink: 0;
             cursor: move;
             gap: 12px;
+        }
+
+        #aiCodeMenu.minimized .header {
+            border-bottom: none;
+            border-radius: 8px;
         }
 
         #aiCodeMenu .header .window-controls {
@@ -190,13 +208,13 @@
             display: flex;
             background: #000000;
             border-bottom: 1px solid #1a1a1a;
-            padding: 0 16px;
+            padding: 0 8px;
             gap: 2px;
             flex-shrink: 0;
         }
 
         #aiCodeMenu .tabs-container .tab {
-            padding: 10px 20px;
+            padding: 10px 16px;
             color: #666666;
             cursor: pointer;
             font-size: 11px;
@@ -244,6 +262,7 @@
             background: #000000;
             border-radius: 0 0 8px 8px;
             max-height: calc(90vh - 120px);
+            padding: 0 8px;
         }
 
         #aiCodeMenu .content::-webkit-scrollbar {
@@ -265,7 +284,7 @@
 
         #aiCodeMenu .tab-content {
             display: none;
-            padding: 20px;
+            padding: 16px 8px 20px 8px;
             animation: fadeSlideIn 0.2s ease;
         }
 
@@ -319,7 +338,6 @@
             background: rgba(255,255,255,0.01);
             transition: all 0.2s ease;
             border: 1px solid transparent;
-            cursor: pointer;
             position: relative;
         }
 
@@ -343,7 +361,6 @@
             color: #e0e0e0;
             font-size: 13px;
             font-weight: 500;
-            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -362,7 +379,7 @@
             width: 40px;
             height: 22px;
             flex-shrink: 0;
-            cursor: pointer;
+            cursor: default;
         }
 
         #aiCodeMenu .toggle-switch input {
@@ -381,7 +398,6 @@
             background: #1a1a1a;
             border-radius: 22px;
             transition: all 0.3s ease;
-            cursor: pointer;
             border: 1px solid rgba(255,255,255,0.05);
         }
 
@@ -718,14 +734,20 @@
                 width: 95%;
                 max-width: 95%;
                 font-size: 12px;
+                padding: 0 4px;
             }
 
             #aiCodeMenu .tab-content {
-                padding: 16px;
+                padding: 12px 4px 16px 4px;
             }
 
             #aiCodeMenu .code-editor textarea {
                 height: 100px;
+            }
+
+            #aiCodeMenu .tabs-container .tab {
+                padding: 10px 12px;
+                font-size: 10px;
             }
         }
     `;
@@ -1099,7 +1121,7 @@
 
     document.querySelectorAll('.option-item').forEach(item => {
         item.onclick = function(e) {
-            if (e.target.tagName !== 'INPUT') {
+            if (e.target.tagName !== 'INPUT' && !e.target.closest('.toggle-switch')) {
                 const checkbox = this.querySelector('input[type="checkbox"]');
                 if (checkbox) {
                     checkbox.checked = !checkbox.checked;
