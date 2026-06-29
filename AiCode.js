@@ -18,65 +18,6 @@
         typingSpeed: 50
     };
 
-    // ========== FUNÇÕES QUE FICAM ESPERANDO CHAMADA ==========
-    window.__aiPasteHandler = function(data) {
-        console.log('📋 Paste Handler chamado!', data);
-        alert('🔓 Paste Handler ativado!\nEstado: ' + (data?.enabled ? 'LIBERADO' : 'BLOQUEADO') + '\nVelocidade: ' + (data?.speed || state.typingSpeed) + 'ms');
-        
-        const enable = data?.enabled ?? state.allowPaste;
-        const pasteHandler = (e) => {
-            e.stopImmediatePropagation();
-            return true;
-        };
-        
-        if (enable) {
-            ['paste', 'copy'].forEach(eventType => {
-                document.addEventListener(eventType, pasteHandler, true);
-            });
-            console.log('🔓 Copy/Paste: Liberado');
-        } else {
-            ['paste', 'copy'].forEach(eventType => {
-                document.removeEventListener(eventType, pasteHandler, true);
-            });
-            console.log('🔒 Copy/Paste: Bloqueado');
-        }
-        
-        return { success: true, state: enable, speed: state.typingSpeed };
-    };
-
-    window.__aiTextHandler = function(data) {
-        console.log('📝 Text Handler chamado!', data);
-        alert('📝 Text Mode ativado!\nEstado: ' + (data?.enabled ? 'ATIVADO' : 'DESATIVADO') + '\nVelocidade: ' + (data?.speed || state.typingSpeed) + 'ms');
-        
-        const enable = data?.enabled ?? state.textInput;
-        console.log(`📝 Text Input Mode: ${enable ? 'ATIVADO' : 'DESATIVADO'}`);
-        
-        return { success: true, state: enable, speed: state.typingSpeed };
-    };
-
-    window.__aiAutoHandler = function(data) {
-        console.log('⚡ Auto Handler chamado!', data);
-        alert('⚡ Auto Execution ativado!\nEstado: ' + (data?.enabled ? 'ATIVADO' : 'DESATIVADO') + '\nMétodo: ' + (data?.method || state.method).toUpperCase() + '\nVelocidade: ' + (data?.speed || state.typingSpeed) + 'ms');
-        
-        const enable = data?.enabled ?? state.autoType;
-        const method = data?.method || state.method;
-        console.log(`⚡ Auto Execution: ${enable ? 'ATIVADO' : 'DESATIVADO'}`);
-        console.log(`🎯 Method: ${method.toUpperCase()}`);
-        
-        return { success: true, autoState: enable, method: method, speed: state.typingSpeed };
-    };
-
-    window.__aiGetState = function() {
-        return {
-            allowPaste: state.allowPaste,
-            textInput: state.textInput,
-            autoType: state.autoType,
-            method: state.method,
-            typingSpeed: state.typingSpeed,
-            minimized: state.minimized
-        };
-    };
-
     // ========== SVG ICONS ==========
     const icons = {
         close: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
