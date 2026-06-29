@@ -3,7 +3,7 @@
 
     // State Manager
     const state = {
-        allowPaste: true,
+        allowPaste: false,
         textInput: false,
         autoType: false,
         method: 'paste',
