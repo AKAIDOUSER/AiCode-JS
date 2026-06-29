@@ -17,7 +17,7 @@
         theme: 'darker'
     };
 
-    // SVG Icons
+    // SVG Icons - Removido o ícone code
     const icons = {
         close: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
         minimize: `<svg width="14" height="2" viewBox="0 0 14 2" fill="none"><path d="M1 1H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
@@ -30,7 +30,12 @@
         checkbox: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
         dropdown: `<svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
         history: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 4V8L10.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
-        warning: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L18 18H2L10 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="10" y1="8" x2="10" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="15" r="0.5" fill="currentColor"/></svg>`
+        warning: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L18 18H2L10 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="10" y1="8" x2="10" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="15" r="0.5" fill="currentColor"/></svg>`,
+        // Novos ícones para indicar estados
+        toggleOn: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="8" cy="8" r="3" fill="currentColor"/></svg>`,
+        toggleOff: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>`,
+        enabled: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5" fill="currentColor"/></svg>`,
+        disabled: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>`
     };
 
     // Darker Theme Styles
@@ -171,32 +176,17 @@
             flex: 1;
             display: flex;
             align-items: center;
-            gap: 8px;
-            justify-content: center;
-        }
-
-        #aiCodeMenu .header .logo {
-            color: #4a4a4a;
-            display: flex;
-            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
         }
 
         #aiCodeMenu .header .title {
             color: #e0e0e0;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 700;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             text-transform: uppercase;
-        }
-
-        #aiCodeMenu .header .version {
-            color: #666666;
-            font-size: 10px;
-            font-weight: 500;
-            background: rgba(255,255,255,0.02);
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: 1px solid #1a1a1a;
+            text-align: right;
         }
 
         #aiCodeMenu .tabs-container {
@@ -320,19 +310,20 @@
         #aiCodeMenu .option-group {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 8px;
         }
 
         #aiCodeMenu .option-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 12px;
+            padding: 12px;
             border-radius: 4px;
             background: rgba(255,255,255,0.01);
-            transition: background 0.2s ease;
+            transition: all 0.2s ease;
             border: 1px solid transparent;
             cursor: pointer;
+            position: relative;
         }
 
         #aiCodeMenu .option-item:hover {
@@ -340,10 +331,49 @@
             border-color: #1a1a1a;
         }
 
+        #aiCodeMenu .option-item .option-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        #aiCodeMenu .option-item .option-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid #1a1a1a;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        #aiCodeMenu .option-item .option-indicator.active {
+            background: rgba(136,136,136,0.1);
+            border-color: #444444;
+            box-shadow: 0 0 8px rgba(0,0,0,0.5);
+        }
+
+        #aiCodeMenu .option-item .option-indicator.active svg {
+            color: #888888;
+        }
+
+        #aiCodeMenu .option-item .option-indicator svg {
+            color: #444444;
+            transition: all 0.3s ease;
+        }
+
+        #aiCodeMenu .option-item .option-info {
+            flex: 1;
+        }
+
         #aiCodeMenu .option-label {
             color: #e0e0e0;
-            font-size: 12px;
-            font-weight: 500;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -353,7 +383,29 @@
         #aiCodeMenu .option-description {
             color: #666666;
             font-size: 10px;
-            margin-top: 2px;
+            margin-top: 3px;
+            line-height: 1.3;
+        }
+
+        #aiCodeMenu .option-status {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid #1a1a1a;
+            color: #444444;
+            transition: all 0.3s ease;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        #aiCodeMenu .option-status.active {
+            color: #888888;
+            background: rgba(136,136,136,0.05);
+            border-color: #333333;
         }
 
         #aiCodeMenu .toggle-switch {
@@ -504,24 +556,6 @@
 
         #aiCodeMenu .code-editor textarea::placeholder {
             color: rgba(255,255,255,0.05);
-        }
-
-        #aiCodeMenu .code-editor .line-numbers {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 40px;
-            background: rgba(0,0,0,0.3);
-            border-right: 1px solid #1a1a1a;
-            padding: 16px 8px;
-            font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
-            font-size: 12px;
-            color: #444444;
-            text-align: right;
-            line-height: 1.6;
-            user-select: none;
-            pointer-events: none;
         }
 
         #aiCodeMenu .button-group {
@@ -749,7 +783,7 @@
     const menu = document.createElement('div');
     menu.id = 'aiCodeMenu';
 
-    // Header
+    // Header - Modificado para remover ícone e versão, título à direita
     const header = document.createElement('div');
     header.className = 'header';
     header.innerHTML = `
@@ -759,9 +793,7 @@
             <button class="btn-maximize" id="btnMaximize" title="Maximize">${icons.maximize}</button>
         </div>
         <div class="title-section">
-            <div class="logo">${icons.code}</div>
             <div class="title">AiCode</div>
-            <div class="version">v3.0</div>
         </div>
     `;
 
@@ -787,7 +819,48 @@
     const content = document.createElement('div');
     content.className = 'content';
 
-    // General Tab
+    // Função para atualizar indicadores visuais das opções
+    function updateOptionIndicators() {
+        // Atualizar Allow Paste
+        updateOptionUI('togglePaste', state.allowPaste, 
+            'Paste operations enabled', 
+            'Paste operations disabled');
+        
+        // Atualizar Text Input
+        updateOptionUI('toggleText', state.textInput, 
+            'Text input mode active', 
+            'Text input mode inactive');
+        
+        // Atualizar Auto Execution
+        updateOptionUI('toggleAuto', state.autoType, 
+            'Auto execution enabled', 
+            'Auto execution disabled');
+    }
+
+    function updateOptionUI(toggleId, isActive, activeText, inactiveText) {
+        const optionItem = document.getElementById(toggleId).closest('.option-item');
+        if (!optionItem) return;
+        
+        const indicator = optionItem.querySelector('.option-indicator');
+        const status = optionItem.querySelector('.option-status');
+        const description = optionItem.querySelector('.option-description');
+        
+        if (indicator) {
+            indicator.className = 'option-indicator' + (isActive ? ' active' : '');
+            indicator.innerHTML = isActive ? icons.enabled : icons.disabled;
+        }
+        
+        if (status) {
+            status.className = 'option-status' + (isActive ? ' active' : '');
+            status.textContent = isActive ? 'ACTIVE' : 'INACTIVE';
+        }
+        
+        if (description) {
+            description.textContent = isActive ? activeText : inactiveText;
+        }
+    }
+
+    // General Tab - Modificado com indicadores visuais mais claros
     const generalContent = document.createElement('div');
     generalContent.className = 'tab-content active';
     generalContent.dataset.tab = 'general';
@@ -799,9 +872,17 @@
             </div>
             <div class="option-group">
                 <div class="option-item" id="optionPaste">
-                    <div>
-                        <div class="option-label">Allow Paste</div>
-                        <div class="option-description">Enable clipboard paste operations</div>
+                    <div class="option-left">
+                        <div class="option-indicator ${state.allowPaste ? 'active' : ''}">
+                            ${state.allowPaste ? icons.enabled : icons.disabled}
+                        </div>
+                        <div class="option-info">
+                            <div class="option-label">
+                                Allow Paste
+                                <span class="option-status ${state.allowPaste ? 'active' : ''}">${state.allowPaste ? 'ACTIVE' : 'INACTIVE'}</span>
+                            </div>
+                            <div class="option-description">${state.allowPaste ? 'Paste operations enabled' : 'Paste operations disabled'}</div>
+                        </div>
                     </div>
                     <label class="toggle-switch">
                         <input type="checkbox" id="togglePaste" ${state.allowPaste ? 'checked' : ''}>
@@ -809,9 +890,17 @@
                     </label>
                 </div>
                 <div class="option-item" id="optionText">
-                    <div>
-                        <div class="option-label">Text Input Mode</div>
-                        <div class="option-description">Manual text input simulation</div>
+                    <div class="option-left">
+                        <div class="option-indicator ${state.textInput ? 'active' : ''}">
+                            ${state.textInput ? icons.enabled : icons.disabled}
+                        </div>
+                        <div class="option-info">
+                            <div class="option-label">
+                                Text Input Mode
+                                <span class="option-status ${state.textInput ? 'active' : ''}">${state.textInput ? 'ACTIVE' : 'INACTIVE'}</span>
+                            </div>
+                            <div class="option-description">${state.textInput ? 'Text input mode active' : 'Text input mode inactive'}</div>
+                        </div>
                     </div>
                     <label class="toggle-switch">
                         <input type="checkbox" id="toggleText" ${state.textInput ? 'checked' : ''}>
@@ -819,9 +908,17 @@
                     </label>
                 </div>
                 <div class="option-item" id="optionAuto">
-                    <div>
-                        <div class="option-label">Auto Execution</div>
-                        <div class="option-description">Automatic code execution</div>
+                    <div class="option-left">
+                        <div class="option-indicator ${state.autoType ? 'active' : ''}">
+                            ${state.autoType ? icons.enabled : icons.disabled}
+                        </div>
+                        <div class="option-info">
+                            <div class="option-label">
+                                Auto Execution
+                                <span class="option-status ${state.autoType ? 'active' : ''}">${state.autoType ? 'ACTIVE' : 'INACTIVE'}</span>
+                            </div>
+                            <div class="option-description">${state.autoType ? 'Auto execution enabled' : 'Auto execution disabled'}</div>
+                        </div>
                     </div>
                     <label class="toggle-switch">
                         <input type="checkbox" id="toggleAuto" ${state.autoType ? 'checked' : ''}>
@@ -1081,11 +1178,17 @@
             pasteBtn.style.opacity = '1';
             pasteBtn.style.cursor = 'pointer';
         }
+        updateOptionUI('togglePaste', state.allowPaste, 
+            'Paste operations enabled', 
+            'Paste operations disabled');
         saveState();
     });
 
     toggleText.addEventListener('change', function() {
         state.textInput = this.checked;
+        updateOptionUI('toggleText', state.textInput, 
+            'Text input mode active', 
+            'Text input mode inactive');
         saveState();
     });
 
@@ -1095,6 +1198,9 @@
             state.method = 'auto';
             document.getElementById('methodSelect').value = 'auto';
         }
+        updateOptionUI('toggleAuto', state.autoType, 
+            'Auto execution enabled', 
+            'Auto execution disabled');
         saveState();
     });
 
@@ -1188,7 +1294,7 @@
     const headerDrag = menu.querySelector('.header');
     
     function startDrag(e) {
-        if (e.target.closest('button')) return; // Don't drag when clicking buttons
+        if (e.target.closest('button')) return;
         
         state.isDragging = true;
         
@@ -1240,6 +1346,8 @@
     document.addEventListener('touchend', stopDrag);
 
     // Initial state
+    updateOptionIndicators();
+    
     if (!state.allowPaste) {
         const pasteBtn = document.getElementById('pasteBtn');
         pasteBtn.disabled = true;
@@ -1250,5 +1358,5 @@
     // Initialize history
     updateHistoryTab();
 
-    console.log('AiCode v3.0 - Dark Theme Initialized');
+    console.log('AiCode - Dark Theme Initialized');
 })();
