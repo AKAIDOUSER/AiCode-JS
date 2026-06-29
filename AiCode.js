@@ -1207,54 +1207,64 @@
     });
 
     // ========== TOGGLE HANDLERS ==========
-    const togglePaste = document.getElementById('togglePaste');
-    const toggleText = document.getElementById('toggleText');
-    const toggleAuto = document.getElementById('toggleAuto');
+    // Substitua os event listeners dos toggles por estes:
 
-    togglePaste.addEventListener('change', function() {
-        state.allowPaste = this.checked;
-        const desc = this.closest('.option-item').querySelector('.option-description');
-        if (desc) desc.textContent = this.checked ? 'Paste operations enabled' : 'Paste operations disabled';
-        
-        // Chama o handler com alert
-        window.__aiPasteHandler({ 
-            enabled: state.allowPaste, 
-            speed: state.typingSpeed 
-        });
-        
-        saveState();
-    });
+// ========== TOGGLE HANDLERS ==========
+const togglePaste = document.getElementById('togglePaste');
+const toggleText = document.getElementById('toggleText');
+const toggleAuto = document.getElementById('toggleAuto');
 
-    toggleText.addEventListener('change', function() {
-        state.textInput = this.checked;
-        const desc = this.closest('.option-item').querySelector('.option-description');
-        if (desc) desc.textContent = this.checked ? 'Text input mode active' : 'Text input mode inactive';
-        
-        window.__aiTextHandler({ 
-            enabled: state.textInput, 
-            speed: state.typingSpeed 
+// Handler específico para o Paste
+togglePaste.addEventListener('change', function() {
+    state.allowPaste = this.checked;
+    const desc = this.closest('.option-item').querySelector('.option-description');
+    if (desc) desc.textContent = this.checked ? 'Paste operations enabled' : 'Paste operations disabled';
+    
+    // Função que libera/bloqueia o paste
+    if (this.checked) {
+        // LIBERAR PASTE
+        const forceEnableCopyPaste = (e) => {
+            e.stopImmediatePropagation();
+            return true;
+        };
+        ['paste', 'copy'].forEach(event => {
+            document.addEventListener(event, forceEnableCopyPaste, true);
         });
-        
-        saveState();
-    });
+        console.log('🔓 Copy/Paste: Liberado');
+    } else {
+        // BLOQUEAR PASTE
+        const forceEnableCopyPaste = (e) => {
+            e.stopImmediatePropagation();
+            return true;
+        };
+        ['paste', 'copy'].forEach(event => {
+            document.removeEventListener(event, forceEnableCopyPaste, true);
+        });
+        console.log('🔒 Copy/Paste: Bloqueado');
+    }
+    
+    saveState();
+});
 
-    toggleAuto.addEventListener('change', function() {
-        state.autoType = this.checked;
-        if (state.autoType) {
-            state.method = 'auto';
-            document.getElementById('methodSelect').value = 'auto';
-        }
-        const desc = this.closest('.option-item').querySelector('.option-description');
-        if (desc) desc.textContent = this.checked ? 'Auto execution enabled' : 'Auto execution disabled';
-        
-        window.__aiAutoHandler({ 
-            enabled: state.autoType, 
-            method: state.method,
-            speed: state.typingSpeed 
-        });
-        
-        saveState();
-    });
+// Handler para Text Input (vazio)
+toggleText.addEventListener('change', function() {
+    state.textInput = this.checked;
+    const desc = this.closest('.option-item').querySelector('.option-description');
+    if (desc) desc.textContent = this.checked ? 'Text input mode active' : 'Text input mode inactive';
+    saveState();
+});
+
+// Handler para Auto Execution (vazio)
+toggleAuto.addEventListener('change', function() {
+    state.autoType = this.checked;
+    if (state.autoType) {
+        state.method = 'auto';
+        document.getElementById('methodSelect').value = 'auto';
+    }
+    const desc = this.closest('.option-item').querySelector('.option-description');
+    if (desc) desc.textContent = this.checked ? 'Auto execution enabled' : 'Auto execution disabled';
+    saveState();
+});
 
     document.querySelectorAll('.option-item').forEach(item => {
         item.onclick = function(e) {
