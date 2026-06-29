@@ -1,50 +1,40 @@
-// ========== TOGGLE PASTE - AiCode ==========
-// Esse script é chamado quando o toggle "Allow Paste" é ativado/desativado
-
+// ========== TOGGLE PASTE - MESMA LÓGICA DO BOTÃO ==========
 (function() {
-    // Tenta pegar o estado atual do menu
-    let state = null;
+    // Pega o estado do toggle do menu
+    let enablePaste = false;
     
+    // Tenta pegar do estado global do menu
     if (window.__aiGetState) {
-        state = window.__aiGetState();
+        const state = window.__aiGetState();
+        enablePaste = state.allowPaste || false;
     } else {
         // Fallback: tenta pegar direto do DOM
         const toggle = document.getElementById('togglePaste');
         if (toggle) {
-            state = { allowPaste: toggle.checked };
+            enablePaste = toggle.checked;
         }
     }
 
-    if (state !== null) {
-        // Chama o handler que já está esperando no menu
-        if (window.__aiPasteHandler) {
-            window.__aiPasteHandler({ 
-                enabled: state.allowPaste
-            });
-        } else {
-            // Se o handler não existir, aplica a lógica localmente
-            const enable = state.allowPaste;
-            const pasteHandler = (e) => {
-                e.stopImmediatePropagation();
-                return true;
-            };
-            
-            if (enable) {
-                ['paste', 'copy'].forEach(eventType => {
-                    document.addEventListener(eventType, pasteHandler, true);
-                });
-                alert('📋 Copy/Paste: LIBERADO pelo toggle-paste.js');
-                console.log('🔓 Copy/Paste: Liberado pelo toggle-paste.js');
-            } else {
-                ['paste', 'copy'].forEach(eventType => {
-                    document.removeEventListener(eventType, pasteHandler, true);
-                });
-                alert('📋 Copy/Paste: BLOQUEADO pelo toggle-paste.js');
-                console.log('🔒 Copy/Paste: Bloqueado pelo toggle-paste.js');
-            }
-        }
+    // ========== MESMA FUNÇÃO DO BOTÃO ==========
+    const forceEnableCopyPaste = (e) => {
+        e.stopImmediatePropagation();
+        return true;
+    };
+
+    // ========== APLICA O ESTADO ==========
+    if (enablePaste) {
+        // ATIVA - igual ao 🔓 do botão
+        ['paste', 'copy'].forEach(event => {
+            document.addEventListener(event, forceEnableCopyPaste, true);
+        });
+        alert('🔓 Copy/Paste: LIBERADO pelo toggle do menu!');
+        console.log('🔓 Copy/Paste: Liberado pelo toggle do menu');
     } else {
-        alert('❌ Menu AiCode não encontrado!');
-        console.warn('⚠️ Menu AiCode não encontrado');
+        // DESATIVA - igual ao 🔒 do botão
+        ['paste', 'copy'].forEach(event => {
+            document.removeEventListener(event, forceEnableCopyPaste, true);
+        });
+        alert('🔒 Copy/Paste: BLOQUEADO pelo toggle do menu!');
+        console.log('🔒 Copy/Paste: Bloqueado pelo toggle do menu');
     }
 })();
