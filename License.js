@@ -2,7 +2,7 @@
     var d = document;
     
     // Reset body styles
-    d.body.style.cssText = '';
+    //d.body.style.cssText = '';
     
     // Create and append main styles
     var s = d.createElement('style');
