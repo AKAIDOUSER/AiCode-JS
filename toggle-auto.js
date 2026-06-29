@@ -1,46 +1,50 @@
+// ========== TOGGLE PASTE - AiCode ==========
+// Esse script é chamado quando o toggle "Allow Paste" é ativado/desativado
+
 (function() {
-    function getAutoState() {
-        const toggle = document.getElementById('toggleAuto');
-        if (toggle) {
-            return toggle.checked;
-        }
-        return null;
-    }
-
-    function getMethodState() {
-        const select = document.getElementById('methodSelect');
-        if (select) {
-            return select.value;
-        }
-        return null;
-    }
-
-    function toggleAutoMode(enable) {
-        console.log(`⚡ Auto Execution: ${enable ? 'ATIVADO' : 'DESATIVADO'}`);
-        return enable;
-    }
-
-    const autoState = getAutoState();
-    const methodState = getMethodState();
-
-    if (autoState !== null) {
-        toggleAutoMode(autoState);
-        window.__aiCodeAutoState = autoState;
-        console.log(`⚡ AiCode Auto State: ${autoState ? 'ATIVADO' : 'DESATIVADO'}`);
+    // Tenta pegar o estado atual do menu
+    let state = null;
+    
+    if (window.__aiGetState) {
+        state = window.__aiGetState();
     } else {
+        // Fallback: tenta pegar direto do DOM
+        const toggle = document.getElementById('togglePaste');
+        if (toggle) {
+            state = { allowPaste: toggle.checked };
+        }
+    }
+
+    if (state !== null) {
+        // Chama o handler que já está esperando no menu
+        if (window.__aiPasteHandler) {
+            window.__aiPasteHandler({ 
+                enabled: state.allowPaste
+            });
+        } else {
+            // Se o handler não existir, aplica a lógica localmente
+            const enable = state.allowPaste;
+            const pasteHandler = (e) => {
+                e.stopImmediatePropagation();
+                return true;
+            };
+            
+            if (enable) {
+                ['paste', 'copy'].forEach(eventType => {
+                    document.addEventListener(eventType, pasteHandler, true);
+                });
+                alert('📋 Copy/Paste: LIBERADO pelo toggle-paste.js');
+                console.log('🔓 Copy/Paste: Liberado pelo toggle-paste.js');
+            } else {
+                ['paste', 'copy'].forEach(eventType => {
+                    document.removeEventListener(eventType, pasteHandler, true);
+                });
+                alert('📋 Copy/Paste: BLOQUEADO pelo toggle-paste.js');
+                console.log('🔒 Copy/Paste: Bloqueado pelo toggle-paste.js');
+            }
+        }
+    } else {
+        alert('❌ Menu AiCode não encontrado!');
         console.warn('⚠️ Menu AiCode não encontrado');
     }
-
-    if (methodState !== null) {
-        window.__aiCodeMethodState = methodState;
-        console.log(`🎯 AiCode Method: ${methodState.toUpperCase()}`);
-    } else {
-        console.warn('⚠️ Dropdown não encontrado');
-    }
-
-    // Retorna os dois estados
-    return {
-        auto: autoState,
-        method: methodState
-    };
 })();
