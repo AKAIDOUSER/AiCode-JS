@@ -1,0 +1,1 @@
+javascript:(function(){if(document.getElementById('aiCodeMenu'))return;fetch('https://raw.githubusercontent.com/AKAIDOUSER/AiCode-JS/main/AiCode.js').then(r=>r.text()).then(t=>{var s=document.createElement('script');s.textContent=t;document.head.appendChild(s)}).catch(()=>alert('Failed to load AiCode'))})();
