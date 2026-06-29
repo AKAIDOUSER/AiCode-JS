@@ -14,10 +14,10 @@
         history: [],
         minimized: false,
         opacity: 1.0,
-        theme: 'dark'
+        theme: 'darker'
     };
 
-    // SVG Icons (professional, no emojis)
+    // SVG Icons
     const icons = {
         close: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
         minimize: `<svg width="14" height="2" viewBox="0 0 14 2" fill="none"><path d="M1 1H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
@@ -33,23 +33,25 @@
         warning: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L18 18H2L10 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="10" y1="8" x2="10" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="15" r="0.5" fill="currentColor"/></svg>`
     };
 
-    // Professional CSS Styles
+    // Darker Theme Styles
     const style = document.createElement('style');
     style.textContent = `
         :root {
-            --menu-bg: #0d1117;
-            --menu-surface: #161b22;
-            --menu-border: #30363d;
-            --menu-text: #c9d1d9;
-            --menu-text-secondary: #8b949e;
-            --menu-accent: #58a6ff;
-            --menu-accent-hover: #79c0ff;
-            --menu-danger: #f85149;
-            --menu-success: #3fb950;
-            --menu-warning: #d2991d;
-            --menu-glow: 0 0 20px rgba(88,166,255,0.15);
+            --menu-bg: #000000;
+            --menu-surface: #0a0a0a;
+            --menu-border: #1a1a1a;
+            --menu-text: #e0e0e0;
+            --menu-text-secondary: #666666;
+            --menu-accent: #4a4a4a;
+            --menu-accent-hover: #666666;
+            --menu-danger: #cc0000;
+            --menu-success: #006600;
+            --menu-warning: #664400;
+            --menu-glow: 0 0 20px rgba(0,0,0,0.9);
             --menu-font: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
             --menu-mono: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+            --menu-input-bg: #000000;
+            --menu-hover: #0d0d0d;
         }
 
         #aiCodeMenu * {
@@ -65,17 +67,17 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: var(--menu-bg);
-            border: 1px solid var(--menu-border);
+            background: #000000;
+            border: 1px solid #1a1a1a;
             border-radius: 8px;
             min-width: 440px;
             max-width: 520px;
             width: 95%;
             z-index: 999999;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.6), var(--menu-glow);
-            font-family: var(--menu-font);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.9);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
             font-size: 13px;
-            color: var(--menu-text);
+            color: #e0e0e0;
             user-select: none;
             max-height: 90vh;
             display: flex;
@@ -97,7 +99,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.75);
+            background: rgba(0,0,0,0.95);
             z-index: 999998;
             animation: fadeIn 0.2s ease;
         }
@@ -116,8 +118,8 @@
             display: flex;
             align-items: center;
             padding: 12px 16px;
-            background: var(--menu-surface);
-            border-bottom: 1px solid var(--menu-border);
+            background: #0a0a0a;
+            border-bottom: 1px solid #1a1a1a;
             border-radius: 8px 8px 0 0;
             flex-shrink: 0;
             cursor: move;
@@ -147,22 +149,22 @@
         }
 
         #aiCodeMenu .header .window-controls button:hover {
-            color: rgba(0,0,0,0.6);
+            color: rgba(255,255,255,0.8);
         }
 
         #aiCodeMenu .header .window-controls .btn-close {
-            background: #f85149;
-            border: 1px solid rgba(0,0,0,0.1);
+            background: #990000;
+            border: 1px solid #1a0000;
         }
 
         #aiCodeMenu .header .window-controls .btn-minimize {
-            background: #d2991d;
-            border: 1px solid rgba(0,0,0,0.1);
+            background: #664400;
+            border: 1px solid #1a1100;
         }
 
         #aiCodeMenu .header .window-controls .btn-maximize {
-            background: #3fb950;
-            border: 1px solid rgba(0,0,0,0.1);
+            background: #004400;
+            border: 1px solid #001a00;
         }
 
         #aiCodeMenu .header .title-section {
@@ -174,13 +176,13 @@
         }
 
         #aiCodeMenu .header .logo {
-            color: var(--menu-accent);
+            color: #4a4a4a;
             display: flex;
             align-items: center;
         }
 
         #aiCodeMenu .header .title {
-            color: var(--menu-text);
+            color: #e0e0e0;
             font-size: 12px;
             font-weight: 700;
             letter-spacing: 2px;
@@ -188,19 +190,19 @@
         }
 
         #aiCodeMenu .header .version {
-            color: var(--menu-text-secondary);
+            color: #666666;
             font-size: 10px;
             font-weight: 500;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.02);
             padding: 2px 6px;
             border-radius: 4px;
-            border: 1px solid var(--menu-border);
+            border: 1px solid #1a1a1a;
         }
 
         #aiCodeMenu .tabs-container {
             display: flex;
-            background: var(--menu-bg);
-            border-bottom: 1px solid var(--menu-border);
+            background: #000000;
+            border-bottom: 1px solid #1a1a1a;
             padding: 0 16px;
             gap: 2px;
             flex-shrink: 0;
@@ -208,7 +210,7 @@
 
         #aiCodeMenu .tabs-container .tab {
             padding: 10px 20px;
-            color: var(--menu-text-secondary);
+            color: #666666;
             cursor: pointer;
             font-size: 11px;
             font-weight: 600;
@@ -222,37 +224,37 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            font-family: var(--menu-font);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         #aiCodeMenu .tabs-container .tab svg {
-            opacity: 0.6;
+            opacity: 0.4;
             transition: opacity 0.2s ease;
         }
 
         #aiCodeMenu .tabs-container .tab:hover {
-            color: var(--menu-text);
-            background: rgba(255,255,255,0.03);
+            color: #999999;
+            background: rgba(255,255,255,0.01);
         }
 
         #aiCodeMenu .tabs-container .tab:hover svg {
-            opacity: 0.9;
+            opacity: 0.7;
         }
 
         #aiCodeMenu .tabs-container .tab.active {
-            color: var(--menu-accent);
-            border-bottom-color: var(--menu-accent);
+            color: #888888;
+            border-bottom-color: #888888;
         }
 
         #aiCodeMenu .tabs-container .tab.active svg {
             opacity: 1;
-            color: var(--menu-accent);
+            color: #888888;
         }
 
         #aiCodeMenu .content {
             overflow-y: auto;
             flex: 1;
-            background: var(--menu-bg);
+            background: #000000;
             border-radius: 0 0 8px 8px;
             max-height: calc(90vh - 120px);
         }
@@ -266,12 +268,12 @@
         }
 
         #aiCodeMenu .content::-webkit-scrollbar-thumb {
-            background: var(--menu-border);
+            background: #1a1a1a;
             border-radius: 2px;
         }
 
         #aiCodeMenu .content::-webkit-scrollbar-thumb:hover {
-            background: var(--menu-text-secondary);
+            background: #333333;
         }
 
         #aiCodeMenu .tab-content {
@@ -298,21 +300,21 @@
         }
 
         #aiCodeMenu .section-title {
-            color: var(--menu-text-secondary);
+            color: #666666;
             font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             margin-bottom: 12px;
             padding-bottom: 8px;
-            border-bottom: 1px solid var(--menu-border);
+            border-bottom: 1px solid #1a1a1a;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
         #aiCodeMenu .section-title svg {
-            opacity: 0.6;
+            opacity: 0.4;
         }
 
         #aiCodeMenu .option-group {
@@ -327,19 +329,19 @@
             justify-content: space-between;
             padding: 10px 12px;
             border-radius: 4px;
-            background: rgba(255,255,255,0.02);
+            background: rgba(255,255,255,0.01);
             transition: background 0.2s ease;
             border: 1px solid transparent;
             cursor: pointer;
         }
 
         #aiCodeMenu .option-item:hover {
-            background: rgba(255,255,255,0.04);
-            border-color: var(--menu-border);
+            background: rgba(255,255,255,0.02);
+            border-color: #1a1a1a;
         }
 
         #aiCodeMenu .option-label {
-            color: var(--menu-text);
+            color: #e0e0e0;
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
@@ -349,7 +351,7 @@
         }
 
         #aiCodeMenu .option-description {
-            color: var(--menu-text-secondary);
+            color: #666666;
             font-size: 10px;
             margin-top: 2px;
         }
@@ -375,11 +377,11 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: var(--menu-border);
+            background: #1a1a1a;
             border-radius: 22px;
             transition: all 0.3s ease;
             cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
         #aiCodeMenu .toggle-switch .switch-slider::before {
@@ -389,20 +391,20 @@
             width: 16px;
             left: 2px;
             bottom: 2px;
-            background: var(--menu-text-secondary);
+            background: #444444;
             border-radius: 50%;
             transition: all 0.3s ease;
         }
 
         #aiCodeMenu .toggle-switch input:checked + .switch-slider {
-            background: var(--menu-accent);
-            border-color: var(--menu-accent);
-            box-shadow: 0 0 10px rgba(88,166,255,0.3);
+            background: #333333;
+            border-color: #444444;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
 
         #aiCodeMenu .toggle-switch input:checked + .switch-slider::before {
             transform: translateX(18px);
-            background: #fff;
+            background: #888888;
         }
 
         #aiCodeMenu .select-wrapper {
@@ -411,7 +413,7 @@
         }
 
         #aiCodeMenu .select-wrapper label {
-            color: var(--menu-text-secondary);
+            color: #666666;
             font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
@@ -423,58 +425,58 @@
         #aiCodeMenu .select-wrapper select {
             width: 100%;
             padding: 10px 12px;
-            background: rgba(255,255,255,0.03);
-            color: var(--menu-text);
-            border: 1px solid var(--menu-border);
+            background: #0a0a0a;
+            color: #e0e0e0;
+            border: 1px solid #1a1a1a;
             border-radius: 4px;
             font-size: 12px;
             outline: none;
             cursor: pointer;
             appearance: none;
             -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,${encodeURIComponent(icons.dropdown)}");
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23666666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 12px center;
             padding-right: 32px;
-            font-family: var(--menu-font);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
             transition: all 0.2s ease;
         }
 
         #aiCodeMenu .select-wrapper select:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: var(--menu-text-secondary);
+            background: #0d0d0d;
+            border-color: #333333;
         }
 
         #aiCodeMenu .select-wrapper select:focus {
-            border-color: var(--menu-accent);
-            box-shadow: 0 0 0 3px rgba(88,166,255,0.1);
+            border-color: #444444;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.03);
         }
 
         #aiCodeMenu .select-wrapper select option {
-            background: var(--menu-bg);
-            color: var(--menu-text);
+            background: #000000;
+            color: #e0e0e0;
         }
 
         #aiCodeMenu .code-editor {
             position: relative;
-            background: rgba(0,0,0,0.3);
+            background: #000000;
             border-radius: 4px;
-            border: 1px solid var(--menu-border);
+            border: 1px solid #1a1a1a;
             overflow: hidden;
             transition: all 0.2s ease;
         }
 
         #aiCodeMenu .code-editor:focus-within {
-            border-color: var(--menu-accent);
-            box-shadow: 0 0 0 3px rgba(88,166,255,0.1);
+            border-color: #444444;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.03);
         }
 
         #aiCodeMenu .code-editor .editor-header {
             padding: 6px 12px;
-            background: rgba(255,255,255,0.02);
-            border-bottom: 1px solid var(--menu-border);
+            background: rgba(255,255,255,0.01);
+            border-bottom: 1px solid #1a1a1a;
             font-size: 10px;
-            color: var(--menu-text-secondary);
+            color: #666666;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
@@ -487,10 +489,10 @@
             width: 100%;
             height: 140px;
             background: transparent;
-            color: var(--menu-text);
+            color: #e0e0e0;
             border: none;
             padding: 16px;
-            font-family: var(--menu-mono);
+            font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
             font-size: 13px;
             resize: vertical;
             outline: none;
@@ -501,7 +503,7 @@
         }
 
         #aiCodeMenu .code-editor textarea::placeholder {
-            color: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.05);
         }
 
         #aiCodeMenu .code-editor .line-numbers {
@@ -510,12 +512,12 @@
             top: 0;
             bottom: 0;
             width: 40px;
-            background: rgba(0,0,0,0.2);
-            border-right: 1px solid var(--menu-border);
+            background: rgba(0,0,0,0.3);
+            border-right: 1px solid #1a1a1a;
             padding: 16px 8px;
-            font-family: var(--menu-mono);
+            font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
             font-size: 12px;
-            color: var(--menu-text-secondary);
+            color: #444444;
             text-align: right;
             line-height: 1.6;
             user-select: none;
@@ -531,9 +533,9 @@
         #aiCodeMenu .button-group button {
             flex: 1;
             padding: 10px 16px;
-            background: rgba(255,255,255,0.03);
-            color: var(--menu-text);
-            border: 1px solid var(--menu-border);
+            background: rgba(255,255,255,0.01);
+            color: #e0e0e0;
+            border: 1px solid #1a1a1a;
             border-radius: 4px;
             cursor: pointer;
             font-size: 11px;
@@ -541,7 +543,7 @@
             transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-family: var(--menu-font);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -549,8 +551,8 @@
         }
 
         #aiCodeMenu .button-group button:hover {
-            background: rgba(255,255,255,0.06);
-            border-color: var(--menu-text-secondary);
+            background: rgba(255,255,255,0.03);
+            border-color: #333333;
             transform: translateY(-1px);
         }
 
@@ -559,36 +561,36 @@
         }
 
         #aiCodeMenu .button-group button.btn-primary {
-            background: var(--menu-accent);
-            border-color: var(--menu-accent);
-            color: #fff;
+            background: #1a1a1a;
+            border-color: #333333;
+            color: #ffffff;
             font-weight: 700;
         }
 
         #aiCodeMenu .button-group button.btn-primary:hover {
-            background: var(--menu-accent-hover);
-            border-color: var(--menu-accent-hover);
-            box-shadow: 0 4px 12px rgba(88,166,255,0.3);
+            background: #2a2a2a;
+            border-color: #444444;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         #aiCodeMenu .button-group button.btn-danger {
-            border-color: var(--menu-danger);
-            color: var(--menu-danger);
+            border-color: #330000;
+            color: #990000;
         }
 
         #aiCodeMenu .button-group button.btn-danger:hover {
-            background: var(--menu-danger);
-            color: #fff;
+            background: #330000;
+            color: #cc0000;
         }
 
         #aiCodeMenu .button-group button.btn-warning {
-            border-color: var(--menu-warning);
-            color: var(--menu-warning);
+            border-color: #332200;
+            color: #885500;
         }
 
         #aiCodeMenu .button-group button.btn-warning:hover {
-            background: var(--menu-warning);
-            color: #fff;
+            background: #332200;
+            color: #aa6600;
         }
 
         #aiCodeMenu .modal-overlay {
@@ -597,7 +599,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.95);
             z-index: 1000000;
             display: flex;
             align-items: center;
@@ -606,13 +608,13 @@
         }
 
         #aiCodeMenu .modal {
-            background: var(--menu-surface);
-            border: 1px solid var(--menu-border);
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
             border-radius: 8px;
             padding: 24px;
             max-width: 400px;
             width: 90%;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.6), var(--menu-glow);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.9);
             animation: modalSlideIn 0.2s ease;
         }
 
@@ -627,29 +629,29 @@
             gap: 12px;
             margin-bottom: 16px;
             padding-bottom: 12px;
-            border-bottom: 1px solid var(--menu-border);
+            border-bottom: 1px solid #1a1a1a;
         }
 
         #aiCodeMenu .modal .modal-title {
             font-size: 14px;
             font-weight: 700;
-            color: var(--menu-text);
+            color: #e0e0e0;
         }
 
         #aiCodeMenu .modal .modal-body {
-            color: var(--menu-text-secondary);
+            color: #888888;
             font-size: 12px;
             line-height: 1.6;
             margin-bottom: 20px;
         }
 
         #aiCodeMenu .modal .modal-body .code-block {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--menu-border);
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #1a1a1a;
             border-radius: 4px;
             padding: 12px;
             margin: 12px 0;
-            font-family: var(--menu-mono);
+            font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
             font-size: 12px;
             max-height: 200px;
             overflow-y: auto;
@@ -663,22 +665,22 @@
 
         #aiCodeMenu .modal .modal-footer button {
             padding: 8px 20px;
-            background: var(--menu-accent);
+            background: #1a1a1a;
             border: none;
             border-radius: 4px;
-            color: #fff;
+            color: #ffffff;
             font-size: 11px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-family: var(--menu-font);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         #aiCodeMenu .modal .modal-footer button:hover {
-            background: var(--menu-accent-hover);
-            box-shadow: 0 4px 12px rgba(88,166,255,0.3);
+            background: #2a2a2a;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         #aiCodeMenu .history-list {
@@ -691,8 +693,8 @@
 
         #aiCodeMenu .history-item {
             padding: 8px 12px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--menu-border);
+            background: rgba(255,255,255,0.01);
+            border: 1px solid #1a1a1a;
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -703,12 +705,12 @@
         }
 
         #aiCodeMenu .history-item:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: var(--menu-accent);
+            background: rgba(255,255,255,0.02);
+            border-color: #444444;
         }
 
         #aiCodeMenu .history-item .history-code {
-            font-family: var(--menu-mono);
+            font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
             max-width: 300px;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -716,7 +718,7 @@
         }
 
         #aiCodeMenu .history-item .history-time {
-            color: var(--menu-text-secondary);
+            color: #666666;
             font-size: 10px;
         }
 
@@ -759,7 +761,7 @@
         <div class="title-section">
             <div class="logo">${icons.code}</div>
             <div class="title">AiCode</div>
-            <div class="version">v2.1</div>
+            <div class="version">v3.0</div>
         </div>
     `;
 
@@ -886,7 +888,7 @@
             </div>
             <div class="history-list" id="historyList">
                 ${state.history.length === 0 ? 
-                    '<div style="color: var(--menu-text-secondary); text-align: center; padding: 20px;">No execution history</div>' : 
+                    '<div style="color: #666666; text-align: center; padding: 20px;">No execution history</div>' : 
                     state.history.map((item, index) => `
                         <div class="history-item" data-index="${index}">
                             <div class="history-code">${item.code.substring(0, 50)}${item.code.length > 50 ? '...' : ''}</div>
@@ -937,7 +939,7 @@
         modal.className = 'modal';
         modal.innerHTML = `
             <div class="modal-header">
-                <span style="color: ${type === 'error' ? 'var(--menu-danger)' : 'var(--menu-accent)'}">${iconSvg}</span>
+                <span style="color: ${type === 'error' ? '#990000' : '#888888'}">${iconSvg}</span>
                 <div class="modal-title">${title}</div>
             </div>
             <div class="modal-body">
@@ -978,7 +980,7 @@
         if (!historyList) return;
 
         if (state.history.length === 0) {
-            historyList.innerHTML = '<div style="color: var(--menu-text-secondary); text-align: center; padding: 20px;">No execution history</div>';
+            historyList.innerHTML = '<div style="color: #666666; text-align: center; padding: 20px;">No execution history</div>';
             return;
         }
 
@@ -1248,5 +1250,5 @@
     // Initialize history
     updateHistoryTab();
 
-    console.log('AiCode Initialized successfully');
+    console.log('AiCode v3.0 - Dark Theme Initialized');
 })();
