@@ -867,7 +867,10 @@
                             ${state.allowPaste ? icons.enabled : icons.disabled}
                         </div>
                         <div class="option-info">
-                           
+                            <div class="option-label">
+                                Allow Paste
+                                <span class="option-status ${state.allowPaste ? 'active' : ''}">${state.allowPaste ? 'ACTIVE' : 'INACTIVE'}</span>
+                            </div>
                             <div class="option-description">${state.allowPaste ? 'Paste operations enabled' : 'Paste operations disabled'}</div>
                         </div>
                     </div>
@@ -1339,6 +1342,21 @@
         pasteBtn.style.opacity = '0.4';
         pasteBtn.style.cursor = 'not-allowed';
     }
+
+    if (!state.textInput) {
+        const pasteBtn = document.getElementById('pasteBtn');
+        pasteBtn.disabled = true;
+        pasteBtn.style.opacity = '0.4';
+        pasteBtn.style.cursor = 'not-allowed';
+    }
+
+    if (!state.autoType) {
+        const pasteBtn = document.getElementById('pasteBtn');
+        pasteBtn.disabled = true;
+        pasteBtn.style.opacity = '0.4';
+        pasteBtn.style.cursor = 'not-allowed';
+    }
+
 
     // Initialize history
     updateHistoryTab();
