@@ -1148,64 +1148,60 @@
     });
 
     // ========== TOGGLE HANDLERS ==========
-    // Substitua os event listeners dos toggles por estes:
+    const togglePaste = document.getElementById('togglePaste');
+    const toggleText = document.getElementById('toggleText');
+    const toggleAuto = document.getElementById('toggleAuto');
 
-// ========== TOGGLE HANDLERS ==========
-const togglePaste = document.getElementById('togglePaste');
-const toggleText = document.getElementById('toggleText');
-const toggleAuto = document.getElementById('toggleAuto');
-
-// Handler específico para o Paste
-togglePaste.addEventListener('change', function() {
-    state.allowPaste = this.checked;
-    const desc = this.closest('.option-item').querySelector('.option-description');
-    if (desc) desc.textContent = this.checked ? 'Paste operations enabled' : 'Paste operations disabled';
-    
-    // Função que libera/bloqueia o paste
-    if (this.checked) {
-        // LIBERAR PASTE
+    // Handler para Allow Paste - APENAS LIBERA/BLOQUEIA
+    togglePaste.addEventListener('change', function() {
+        state.allowPaste = this.checked;
+        const desc = this.closest('.option-item').querySelector('.option-description');
+        if (desc) desc.textContent = this.checked ? 'Paste operations enabled' : 'Paste operations disabled';
+        
+        // Função que libera/bloqueia o paste
         const forceEnableCopyPaste = (e) => {
             e.stopImmediatePropagation();
             return true;
         };
-        ['paste', 'copy'].forEach(event => {
-            document.addEventListener(event, forceEnableCopyPaste, true);
-        });
-        console.log('🔓 Copy/Paste: Liberado');
-    } else {
-        // BLOQUEAR PASTE
-        const forceEnableCopyPaste = (e) => {
-            e.stopImmediatePropagation();
-            return true;
-        };
-        ['paste', 'copy'].forEach(event => {
-            document.removeEventListener(event, forceEnableCopyPaste, true);
-        });
-        console.log('🔒 Copy/Paste: Bloqueado');
-    }
-    
-    saveState();
-});
+        
+        if (this.checked) {
+            // LIBERAR PASTE
+            ['paste', 'copy'].forEach(event => {
+                document.addEventListener(event, forceEnableCopyPaste, true);
+            });
+            console.log('🔓 Copy/Paste: Liberado');
+        } else {
+            // BLOQUEAR PASTE
+            ['paste', 'copy'].forEach(event => {
+                document.removeEventListener(event, forceEnableCopyPaste, true);
+            });
+            console.log('🔒 Copy/Paste: Bloqueado');
+        }
+        
+        saveState();
+    });
 
-// Handler para Text Input (vazio)
-toggleText.addEventListener('change', function() {
-    state.textInput = this.checked;
-    const desc = this.closest('.option-item').querySelector('.option-description');
-    if (desc) desc.textContent = this.checked ? 'Text input mode active' : 'Text input mode inactive';
-    saveState();
-});
+    // Handler para Text Input - VAZIO
+    toggleText.addEventListener('change', function() {
+        state.textInput = this.checked;
+        const desc = this.closest('.option-item').querySelector('.option-description');
+        if (desc) desc.textContent = this.checked ? 'Text input mode active' : 'Text input mode inactive';
+        console.log(`📝 Text Input Mode: ${this.checked ? 'ATIVADO' : 'DESATIVADO'}`);
+        saveState();
+    });
 
-// Handler para Auto Execution (vazio)
-toggleAuto.addEventListener('change', function() {
-    state.autoType = this.checked;
-    if (state.autoType) {
-        state.method = 'auto';
-        document.getElementById('methodSelect').value = 'auto';
-    }
-    const desc = this.closest('.option-item').querySelector('.option-description');
-    if (desc) desc.textContent = this.checked ? 'Auto execution enabled' : 'Auto execution disabled';
-    saveState();
-});
+    // Handler para Auto Execution - VAZIO
+    toggleAuto.addEventListener('change', function() {
+        state.autoType = this.checked;
+        if (state.autoType) {
+            state.method = 'auto';
+            document.getElementById('methodSelect').value = 'auto';
+        }
+        const desc = this.closest('.option-item').querySelector('.option-description');
+        if (desc) desc.textContent = this.checked ? 'Auto execution enabled' : 'Auto execution disabled';
+        console.log(`⚡ Auto Execution: ${this.checked ? 'ATIVADO' : 'DESATIVADO'}`);
+        saveState();
+    });
 
     document.querySelectorAll('.option-item').forEach(item => {
         item.onclick = function(e) {
@@ -1366,10 +1362,5 @@ toggleAuto.addEventListener('change', function() {
     updateHistoryTab();
 
     console.log('✅ AiCode Initialized');
-    console.log('📊 Funções esperando chamada:');
-    console.log('  - window.__aiPasteHandler(data)');
-    console.log('  - window.__aiTextHandler(data)');
-    console.log('  - window.__aiAutoHandler(data)');
-    console.log('  - window.__aiGetState()');
-    console.log('📦 Estado atual:', window.__aiGetState());
+    console.log('📦 Estado atual:', state);
 })();
