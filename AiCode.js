@@ -867,10 +867,7 @@
                             ${state.allowPaste ? icons.enabled : icons.disabled}
                         </div>
                         <div class="option-info">
-                            <div class="option-label">
-                                Allow Paste
-                                <span class="option-status ${state.allowPaste ? 'active' : ''}">${state.allowPaste ? 'ACTIVE' : 'INACTIVE'}</span>
-                            </div>
+                           
                             <div class="option-description">${state.allowPaste ? 'Paste operations enabled' : 'Paste operations disabled'}</div>
                         </div>
                     </div>
