@@ -1,41 +1,65 @@
 (function() {
     var d = document;
     
-    // Reset body styles
-    //d.body.style.cssText = '';
-    
-    // Create and append main styles
-    var s = d.createElement('style');
-    s.textContent = '@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");' +
-        '* { margin: 0; padding: 0; box-sizing: border-box; }' +
+    // Remover apenas elementos do Key System, não o body inteiro
+    function removeKeySystemElements() {
+        // Remove blur overlay
+        var blurs = d.querySelectorAll('div[style*="backdrop-filter"]');
+        blurs.forEach(function(el) { el.remove(); });
         
-        // Keyframe animations
-        '@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }' +
-        '@keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(6px); } }' +
-        '@keyframes slideInRight { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: translateX(0); } }' +
-        '@keyframes slideOutRight { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(60px); } }' +
-        '@keyframes spin { to { transform: rotate(360deg); } }' +
-        '@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }' +
-        '@keyframes flyIn { ' +
-            '0% { opacity: 0; transform: translate(-30%, -50%) scale(0.8); } ' +
-            '100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } ' +
-        '}';
-    d.head.appendChild(s);
+        // Remove loading screen
+        var loadDivs = d.querySelectorAll('div[style*="z-index: 1000"]');
+        loadDivs.forEach(function(el) { el.remove(); });
+        
+        // Remove login container
+        var loginBoxes = d.querySelectorAll('div[style*="flyIn"]');
+        loginBoxes.forEach(function(el) { el.remove(); });
+        
+        // Remove notification container
+        var notifContainers = d.querySelectorAll('div[style*="flex-direction: column"][style*="gap: 8px"]');
+        notifContainers.forEach(function(el) { el.remove(); });
+        
+        // Remove welcome screen
+        var welcomeScreens = d.querySelectorAll('div[style*="z-index:1000"]');
+        welcomeScreens.forEach(function(el) { el.remove(); });
+    }
     
-    // Load Boxicons
-    var l = d.createElement('link');
-    l.href = 'https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css';
-    l.rel = 'stylesheet';
-    d.head.appendChild(l);
+    // Create and append main styles (apenas se não existirem)
+    if (!d.querySelector('style[data-aicode]')) {
+        var s = d.createElement('style');
+        s.setAttribute('data-aicode', 'true');
+        s.textContent = '@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");' +
+            '@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }' +
+            '@keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(6px); } }' +
+            '@keyframes slideInRight { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: translateX(0); } }' +
+            '@keyframes slideOutRight { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(60px); } }' +
+            '@keyframes spin { to { transform: rotate(360deg); } }' +
+            '@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }' +
+            '@keyframes flyIn { ' +
+                '0% { opacity: 0; transform: translate(-30%, -50%) scale(0.8); } ' +
+                '100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } ' +
+            '}';
+        d.head.appendChild(s);
+    }
     
-    // Create background blur overlay
+    // Load Boxicons (apenas se não existir)
+    if (!d.querySelector('link[href*="boxicons"]')) {
+        var l = d.createElement('link');
+        l.href = 'https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css';
+        l.rel = 'stylesheet';
+        d.head.appendChild(l);
+    }
+    
+    // Create background blur overlay com atributo identificador
     var blur = d.createElement('div');
+    blur.setAttribute('data-aicode-overlay', 'true');
     blur.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; z-index:998; ' +
         'backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); background:rgba(0,0,0,0.3);';
     d.body.appendChild(blur);
     
-    // Create loading screen
+    // Create loading screen com atributo identificador
     var loadDiv = d.createElement('div');
+    loadDiv.setAttribute('data-aicode-loading', 'true');
     loadDiv.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; z-index:1000; ' +
         'display:flex; justify-content:center; align-items:center;';
     
@@ -43,35 +67,28 @@
     loadBox.style.cssText = 'background:#0d0d0d; border:1px solid #1a1a1a; border-radius:20px; ' +
         'padding:32px 40px; box-shadow:0 20px 60px rgba(0,0,0,0.8); text-align:center; font-family:Inter,sans-serif;';
     
-    // Loading spinner
     var loadSpin = d.createElement('div');
     loadSpin.style.cssText = 'width:40px; height:40px; border:2px solid #1a1a1a; border-top-color:#fff; ' +
         'border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 20px;';
     
-    // Loading text
     var loadTitle = d.createElement('div');
     loadTitle.style.cssText = 'font-size:14px; font-weight:500; color:#ccc; margin-bottom:6px;';
     loadTitle.textContent = 'Loading...';
     
-    // Loading subtitle
     var loadSub = d.createElement('div');
     loadSub.style.cssText = 'font-size:10px; color:#444; margin-top:12px;';
     loadSub.textContent = 'AiCode Key System';
     
-    // Assemble loading screen
     loadBox.appendChild(loadSpin);
     loadBox.appendChild(loadTitle);
     loadBox.appendChild(loadSub);
     loadDiv.appendChild(loadBox);
     d.body.appendChild(loadDiv);
     
-    // Users array
     var users = [];
     
-    // Parse user data from fetched content
     function parseUsers(data) {
         var u = [];
-        
         try {
             var j = JSON.parse(data);
             if (Array.isArray(j)) {
@@ -88,7 +105,6 @@
             }
         } catch(e) {}
         
-        // Fallback parsing with regex
         var p = /\{([^}]+)\}/g;
         var m;
         while ((m = p.exec(data)) !== null) {
@@ -109,13 +125,10 @@
         return u;
     }
     
-    // Fetch user whitelist
     fetch('https://cdn.jsdelivr.net/gh/AKAIDOUSER/AiCode-JS@main/WhiteList.js')
         .then(function(r) { return r.text(); })
         .then(function(data) {
             users = parseUsers(data);
-            
-            // Fallback users if none parsed
             if (users.length === 0) {
                 users = [
                     { username: "admin", password: "123456", name: "Admin" },
@@ -124,11 +137,9 @@
                 ];
             }
             
-            // Update loading animation
             loadSpin.style.borderColor = '#1a3a1a';
             loadSpin.style.borderTopColor = '#28c840';
             
-            // Hide loading and show login
             setTimeout(function() {
                 loadDiv.style.animation = 'fadeOut 0.3s ease-out forwards';
                 setTimeout(function() {
@@ -138,7 +149,6 @@
             }, 800);
         })
         .catch(function() {
-            // Fallback on fetch error
             users = [
                 { username: "admin", password: "123456", name: "Admin" },
                 { username: "user", password: "user123", name: "User" },
@@ -154,20 +164,20 @@
             }, 1000);
         });
     
-    // Create login interface
     function createLogin() {
-        // Main container
+        // Remover elementos anteriores do Key System
+        removeKeySystemElements();
+        
         var c = d.createElement('div');
+        c.setAttribute('data-aicode-login', 'true');
         c.style.cssText = 'width:360px; padding:28px 32px 32px; position:fixed; top:50%; left:50%; z-index:999; ' +
             'font-family:Inter,sans-serif; background:#0d0d0d; border-radius:24px; border:1px solid #1a1a1a; ' +
             'box-shadow:0 20px 60px rgba(0,0,0,0.8); ' +
             'animation:flyIn 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;';
         
-        // Header
         var h = d.createElement('div');
         h.style.cssText = 'display:flex; align-items:center; justify-content:space-between; margin-bottom:32px;';
         
-        // Window dots
         var dots = d.createElement('div');
         dots.style.cssText = 'display:flex; gap:5px;';
         ['#ff5f57', '#febc2e', '#28c840'].forEach(function(cl) {
@@ -176,7 +186,6 @@
             dots.appendChild(dot);
         });
         
-        // Brand
         var brand = d.createElement('div');
         brand.style.cssText = 'text-align:right;';
         
@@ -190,12 +199,10 @@
         
         brand.appendChild(bt);
         brand.appendChild(bs);
-        
         h.appendChild(dots);
         h.appendChild(brand);
         c.appendChild(h);
         
-        // Username input
         var uG = d.createElement('div');
         uG.style.cssText = 'margin-bottom:12px; position:relative;';
         
@@ -225,7 +232,6 @@
         uG.appendChild(uIc);
         c.appendChild(uG);
         
-        // Password input
         var pG = d.createElement('div');
         pG.style.cssText = 'margin-bottom:12px; position:relative;';
         
@@ -255,7 +261,6 @@
         pG.appendChild(pIc);
         c.appendChild(pG);
         
-        // Sign in button
         var btn = d.createElement('button');
         btn.textContent = 'Sign in';
         btn.style.cssText = 'width:100%; height:44px; background:transparent; border:1px solid #2a2a2a; ' +
@@ -284,7 +289,6 @@
         
         c.appendChild(btn);
         
-        // Footer
         var ft = d.createElement('div');
         ft.style.cssText = 'text-align:center; margin-top:20px; font-size:10px; color:#222;';
         ft.innerHTML = 'AiCode <span style="color:#333;">•</span> Key System';
@@ -292,12 +296,11 @@
         
         d.body.appendChild(c);
         
-        // Notification container
         var nC = d.createElement('div');
+        nC.setAttribute('data-aicode-notifications', 'true');
         nC.style.cssText = 'position:fixed; top:16px; right:16px; display:flex; flex-direction:column; gap:8px; z-index:1000;';
         d.body.appendChild(nC);
         
-        // Notification function
         function notify(msg, type) {
             var n = d.createElement('div');
             n.style.cssText = 'background:#0d0d0d; border:1px solid #1a1a1a; padding:12px 18px; ' +
@@ -320,7 +323,6 @@
             n.appendChild(d.createTextNode(msg));
             nC.appendChild(n);
             
-            // Remove old notifications if more than 3
             if (nC.children.length > 3) {
                 nC.firstChild.style.animation = 'slideOutRight 0.25s ease-in forwards';
                 setTimeout(function() {
@@ -328,7 +330,6 @@
                 }, 250);
             }
             
-            // Auto remove after 3 seconds
             setTimeout(function() {
                 n.style.animation = 'slideOutRight 0.25s ease-in forwards';
                 setTimeout(function() {
@@ -337,7 +338,6 @@
             }, 3000);
         }
         
-        // Sign in button click handler
         btn.addEventListener('click', function() {
             var u = uIn.value;
             var p = pIn.value;
@@ -347,7 +347,6 @@
                 return;
             }
             
-            // Show loading state
             btn.textContent = '';
             btn.style.pointerEvents = 'none';
             var sp = d.createElement('div');
@@ -355,7 +354,6 @@
                 'border-top-color:transparent; border-radius:50%; animation:spin 0.6s linear infinite; margin:0 auto;';
             btn.appendChild(sp);
             
-            // Validate credentials
             setTimeout(function() {
                 btn.textContent = 'Sign in';
                 btn.style.pointerEvents = 'auto';
@@ -368,10 +366,11 @@
                     notify('Welcome, ' + user.name + '!', 'success');
                     
                     setTimeout(function() {
-                        // Clear body and show welcome screen
-                        //d.body.innerHTML = '';
+                        // Remover elementos do Key System
+                        removeKeySystemElements();
                         
                         var fo = d.createElement('div');
+                        fo.setAttribute('data-aicode-welcome', 'true');
                         fo.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; ' +
                             'z-index:1000; display:flex; justify-content:center; align-items:center; ' +
                             'background:rgba(0,0,0,0.3); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);';
@@ -381,28 +380,23 @@
                             'padding:32px 40px; box-shadow:0 20px 60px rgba(0,0,0,0.8); text-align:center; ' +
                             'font-family:Inter,sans-serif; animation:fadeIn 0.4s ease-out;';
                         
-                        // Checkmark circle
                         var ck = d.createElement('div');
                         ck.style.cssText = 'width:50px; height:50px; border:2px solid #28c840; border-radius:50%; ' +
                             'display:flex; align-items:center; justify-content:center; margin:0 auto 20px;';
                         ck.innerHTML = '<i class="bx bx-check" style="color:#28c840; font-size:28px;"></i>';
                         
-                        // Welcome text
                         var wt = d.createElement('div');
                         wt.style.cssText = 'font-size:16px; font-weight:500; color:#ccc; margin-bottom:4px;';
                         wt.textContent = 'Welcome, ' + user.name;
                         
-                        // Loading text
                         var ws = d.createElement('div');
                         ws.style.cssText = 'font-size:11px; color:#555; margin-bottom:20px;';
                         ws.textContent = 'Loading...';
                         
-                        // Loading spinner
                         var fs = d.createElement('div');
                         fs.style.cssText = 'width:30px; height:30px; border:2px solid #1a1a1a; ' +
                             'border-top-color:#28c840; border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto;';
                         
-                        // Assemble welcome screen
                         fb.appendChild(ck);
                         fb.appendChild(wt);
                         fb.appendChild(ws);
@@ -410,16 +404,20 @@
                         fo.appendChild(fb);
                         d.body.appendChild(fo);
                         
-                        // Load main script
                         setTimeout(function() {
                             fetch('https://cdn.jsdelivr.net/gh/AKAIDOUSER/AiCode-JS@main/AiCode.js')
                                 .then(function(r) { return r.text(); })
                                 .then(function(script) {
+                                    // Remover welcome screen
                                     fo.remove();
+                                    
+                                    // Executar o script principal
                                     var se = d.createElement('script');
                                     se.textContent = script;
                                     d.body.appendChild(se);
-                                    d.body.style.cssText = '';
+                                    
+                                    // NÃO limpar o body.style.cssText
+                                    // d.body.style.cssText = ''; // REMOVIDO
                                 })
                                 .catch(function() {
                                     fo.remove();
@@ -433,7 +431,6 @@
             }, 600);
         });
         
-        // Keyboard event handlers
         pIn.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 btn.click();
