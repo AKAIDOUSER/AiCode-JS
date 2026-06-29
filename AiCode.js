@@ -15,10 +15,69 @@
         minimized: false,
         opacity: 1.0,
         theme: 'darker',
-        typingSpeed: 50 // Velocidade padrão da digitação
+        typingSpeed: 50
     };
 
-    // SVG Icons
+    // ========== FUNÇÕES QUE FICAM ESPERANDO CHAMADA ==========
+    window.__aiPasteHandler = function(data) {
+        console.log('📋 Paste Handler chamado!', data);
+        alert('🔓 Paste Handler ativado!\nEstado: ' + (data?.enabled ? 'LIBERADO' : 'BLOQUEADO') + '\nVelocidade: ' + (data?.speed || state.typingSpeed) + 'ms');
+        
+        const enable = data?.enabled ?? state.allowPaste;
+        const pasteHandler = (e) => {
+            e.stopImmediatePropagation();
+            return true;
+        };
+        
+        if (enable) {
+            ['paste', 'copy'].forEach(eventType => {
+                document.addEventListener(eventType, pasteHandler, true);
+            });
+            console.log('🔓 Copy/Paste: Liberado');
+        } else {
+            ['paste', 'copy'].forEach(eventType => {
+                document.removeEventListener(eventType, pasteHandler, true);
+            });
+            console.log('🔒 Copy/Paste: Bloqueado');
+        }
+        
+        return { success: true, state: enable, speed: state.typingSpeed };
+    };
+
+    window.__aiTextHandler = function(data) {
+        console.log('📝 Text Handler chamado!', data);
+        alert('📝 Text Mode ativado!\nEstado: ' + (data?.enabled ? 'ATIVADO' : 'DESATIVADO') + '\nVelocidade: ' + (data?.speed || state.typingSpeed) + 'ms');
+        
+        const enable = data?.enabled ?? state.textInput;
+        console.log(`📝 Text Input Mode: ${enable ? 'ATIVADO' : 'DESATIVADO'}`);
+        
+        return { success: true, state: enable, speed: state.typingSpeed };
+    };
+
+    window.__aiAutoHandler = function(data) {
+        console.log('⚡ Auto Handler chamado!', data);
+        alert('⚡ Auto Execution ativado!\nEstado: ' + (data?.enabled ? 'ATIVADO' : 'DESATIVADO') + '\nMétodo: ' + (data?.method || state.method).toUpperCase() + '\nVelocidade: ' + (data?.speed || state.typingSpeed) + 'ms');
+        
+        const enable = data?.enabled ?? state.autoType;
+        const method = data?.method || state.method;
+        console.log(`⚡ Auto Execution: ${enable ? 'ATIVADO' : 'DESATIVADO'}`);
+        console.log(`🎯 Method: ${method.toUpperCase()}`);
+        
+        return { success: true, autoState: enable, method: method, speed: state.typingSpeed };
+    };
+
+    window.__aiGetState = function() {
+        return {
+            allowPaste: state.allowPaste,
+            textInput: state.textInput,
+            autoType: state.autoType,
+            method: state.method,
+            typingSpeed: state.typingSpeed,
+            minimized: state.minimized
+        };
+    };
+
+    // ========== SVG ICONS ==========
     const icons = {
         close: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
         minimize: `<svg width="14" height="2" viewBox="0 0 14 2" fill="none"><path d="M1 1H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
@@ -42,7 +101,7 @@
     fontLink.rel = 'stylesheet';
     document.head.appendChild(fontLink);
 
-    // Darker Theme Styles
+    // ========== CSS COMPLETO ==========
     const style = document.createElement('style');
     style.textContent = `
         * {
@@ -125,7 +184,7 @@
         #aiCodeMenu .header {
             display: flex;
             align-items: center;
-            padding: 10px 8px;
+            padding: 12px 8px;
             background: #0a0a0a;
             border-bottom: 1px solid #1a1a1a;
             border-radius: 8px 8px 0 0;
@@ -215,7 +274,7 @@
         }
 
         #aiCodeMenu .tabs-container .tab {
-            padding: 8px 14px;
+            padding: 10px 16px;
             color: #666666;
             cursor: pointer;
             font-size: 11px;
@@ -285,7 +344,7 @@
 
         #aiCodeMenu .tab-content {
             display: none;
-            padding: 12px 8px 16px 8px;
+            padding: 16px 8px 20px 8px;
             animation: fadeSlideIn 0.2s ease;
         }
 
@@ -299,7 +358,7 @@
         }
 
         #aiCodeMenu .section {
-            margin-bottom: 16px;
+            margin-bottom: 24px;
         }
 
         #aiCodeMenu .section:last-child {
@@ -312,8 +371,8 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-bottom: 8px;
-            padding-bottom: 6px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
             border-bottom: 1px solid #1a1a1a;
             display: flex;
             align-items: center;
@@ -327,14 +386,14 @@
         #aiCodeMenu .option-group {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 8px;
         }
 
         #aiCodeMenu .option-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 6px 10px;
+            padding: 8px 12px;
             border-radius: 4px;
             background: rgba(255,255,255,0.01);
             transition: all 0.2s ease;
@@ -350,7 +409,7 @@
         #aiCodeMenu .option-item .option-left {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex: 1;
         }
 
@@ -360,7 +419,7 @@
 
         #aiCodeMenu .option-label {
             color: #e0e0e0;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 500;
             display: flex;
             align-items: center;
@@ -369,16 +428,16 @@
 
         #aiCodeMenu .option-description {
             color: #666666;
-            font-size: 9px;
-            margin-top: 1px;
-            line-height: 1.2;
+            font-size: 10px;
+            margin-top: 2px;
+            line-height: 1.3;
             font-weight: 400;
         }
 
         #aiCodeMenu .toggle-switch {
             position: relative;
-            width: 36px;
-            height: 20px;
+            width: 40px;
+            height: 22px;
             flex-shrink: 0;
             cursor: default;
         }
@@ -397,7 +456,7 @@
             right: 0;
             bottom: 0;
             background: #1a1a1a;
-            border-radius: 20px;
+            border-radius: 22px;
             transition: all 0.3s ease;
             border: 1px solid rgba(255,255,255,0.05);
         }
@@ -405,8 +464,8 @@
         #aiCodeMenu .toggle-switch .switch-slider::before {
             content: "";
             position: absolute;
-            height: 14px;
-            width: 14px;
+            height: 16px;
+            width: 16px;
             left: 2px;
             bottom: 2px;
             background: #444444;
@@ -421,15 +480,67 @@
         }
 
         #aiCodeMenu .toggle-switch input:checked + .switch-slider::before {
-            transform: translateX(16px);
+            transform: translateX(18px);
             background: #888888;
+        }
+
+        #aiCodeMenu .select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        #aiCodeMenu .select-wrapper label {
+            color: #666666;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        #aiCodeMenu .select-wrapper select {
+            width: 100%;
+            padding: 10px 12px;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            border: 1px solid #1a1a1a;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 400;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23666666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+            font-family: 'Poppins', sans-serif !important;
+            transition: all 0.2s ease;
+        }
+
+        #aiCodeMenu .select-wrapper select:hover {
+            background: #0d0d0d;
+            border-color: #333333;
+        }
+
+        #aiCodeMenu .select-wrapper select:focus {
+            border-color: #444444;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.02);
+        }
+
+        #aiCodeMenu .select-wrapper select option {
+            background: #000000;
+            color: #e0e0e0;
+            font-family: 'Poppins', sans-serif !important;
         }
 
         #aiCodeMenu .speed-slider-wrapper {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 4px 0;
+            padding: 8px 0 4px 0;
         }
 
         #aiCodeMenu .speed-slider-wrapper label {
@@ -482,58 +593,6 @@
             font-weight: 600;
             min-width: 35px;
             text-align: center;
-        }
-
-        #aiCodeMenu .select-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        #aiCodeMenu .select-wrapper label {
-            color: #666666;
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-            display: block;
-        }
-
-        #aiCodeMenu .select-wrapper select {
-            width: 100%;
-            padding: 8px 12px;
-            background: #0a0a0a;
-            color: #e0e0e0;
-            border: 1px solid #1a1a1a;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 400;
-            outline: none;
-            cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23666666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            padding-right: 32px;
-            font-family: 'Poppins', sans-serif !important;
-            transition: all 0.2s ease;
-        }
-
-        #aiCodeMenu .select-wrapper select:hover {
-            background: #0d0d0d;
-            border-color: #333333;
-        }
-
-        #aiCodeMenu .select-wrapper select:focus {
-            border-color: #444444;
-            box-shadow: 0 0 0 2px rgba(255,255,255,0.02);
-        }
-
-        #aiCodeMenu .select-wrapper select option {
-            background: #000000;
-            color: #e0e0e0;
-            font-family: 'Poppins', sans-serif !important;
         }
 
         #aiCodeMenu .code-editor {
@@ -595,13 +654,13 @@
 
         #aiCodeMenu .button-group button {
             flex: 1;
-            padding: 8px 12px;
+            padding: 10px 16px;
             background: rgba(255,255,255,0.01);
             color: #e0e0e0;
             border: 1px solid #1a1a1a;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 500;
             transition: all 0.2s ease;
             text-transform: uppercase;
@@ -756,7 +815,7 @@
         }
 
         #aiCodeMenu .history-item {
-            padding: 6px 10px;
+            padding: 8px 12px;
             background: rgba(255,255,255,0.01);
             border: 1px solid #1a1a1a;
             border-radius: 4px;
@@ -798,7 +857,7 @@
             }
 
             #aiCodeMenu .tab-content {
-                padding: 10px 4px 12px 4px;
+                padding: 12px 4px 16px 4px;
             }
 
             #aiCodeMenu .code-editor textarea {
@@ -806,14 +865,14 @@
             }
 
             #aiCodeMenu .tabs-container .tab {
-                padding: 8px 10px;
+                padding: 10px 12px;
                 font-size: 10px;
             }
         }
     `;
     document.head.appendChild(style);
 
-    // Create Elements
+    // ========== CRIAÇÃO DOS ELEMENTOS ==========
     const overlay = document.createElement('div');
     overlay.className = 'overlay';
     overlay.id = 'aiCodeOverlay';
@@ -996,7 +1055,7 @@
     document.body.appendChild(overlay);
     document.body.appendChild(menu);
 
-    // Functions
+    // ========== FUNÇÕES ==========
     function switchTab(tabId) {
         state.activeTab = tabId;
         
@@ -1089,7 +1148,7 @@
 
     function saveState() {
         try {
-            localStorage.setItem('cs2ModMenuState', JSON.stringify(state));
+            localStorage.setItem('aiCodeMenuState', JSON.stringify(state));
         } catch (e) {
             console.warn('State save failed:', e);
         }
@@ -1097,7 +1156,7 @@
 
     function loadState() {
         try {
-            const saved = localStorage.getItem('cs2ModMenuState');
+            const saved = localStorage.getItem('aiCodeMenuState');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 Object.assign(state, parsed);
@@ -1109,7 +1168,7 @@
 
     loadState();
 
-    // Event Handlers
+    // ========== EVENT HANDLERS ==========
     document.getElementById('btnClose').onclick = () => {
         menu.style.animation = 'slideDown 0.2s ease reverse';
         overlay.style.animation = 'fadeIn 0.2s ease reverse';
@@ -1126,6 +1185,7 @@
         } else {
             menu.classList.remove('minimized');
         }
+        saveState();
     };
 
     document.getElementById('btnMaximize').onclick = () => {
@@ -1146,25 +1206,22 @@
         tab.onclick = () => switchTab(tab.dataset.tab);
     });
 
-    // Toggle handlers
+    // ========== TOGGLE HANDLERS ==========
     const togglePaste = document.getElementById('togglePaste');
     const toggleText = document.getElementById('toggleText');
     const toggleAuto = document.getElementById('toggleAuto');
 
     togglePaste.addEventListener('change', function() {
         state.allowPaste = this.checked;
-        const pasteBtn = document.getElementById('pasteBtn');
-        if (!state.allowPaste) {
-            pasteBtn.disabled = true;
-            pasteBtn.style.opacity = '0.4';
-            pasteBtn.style.cursor = 'not-allowed';
-        } else {
-            pasteBtn.disabled = false;
-            pasteBtn.style.opacity = '1';
-            pasteBtn.style.cursor = 'pointer';
-        }
         const desc = this.closest('.option-item').querySelector('.option-description');
         if (desc) desc.textContent = this.checked ? 'Paste operations enabled' : 'Paste operations disabled';
+        
+        // Chama o handler com alert
+        window.__aiPasteHandler({ 
+            enabled: state.allowPaste, 
+            speed: state.typingSpeed 
+        });
+        
         saveState();
     });
 
@@ -1172,6 +1229,12 @@
         state.textInput = this.checked;
         const desc = this.closest('.option-item').querySelector('.option-description');
         if (desc) desc.textContent = this.checked ? 'Text input mode active' : 'Text input mode inactive';
+        
+        window.__aiTextHandler({ 
+            enabled: state.textInput, 
+            speed: state.typingSpeed 
+        });
+        
         saveState();
     });
 
@@ -1183,18 +1246,14 @@
         }
         const desc = this.closest('.option-item').querySelector('.option-description');
         if (desc) desc.textContent = this.checked ? 'Auto execution enabled' : 'Auto execution disabled';
+        
+        window.__aiAutoHandler({ 
+            enabled: state.autoType, 
+            method: state.method,
+            speed: state.typingSpeed 
+        });
+        
         saveState();
-    });
-
-    // Speed slider
-    const speedSlider = document.getElementById('typingSpeed');
-    const speedValue = document.getElementById('speedValue');
-    
-    speedSlider.addEventListener('input', function() {
-        state.typingSpeed = parseInt(this.value);
-        speedValue.textContent = state.typingSpeed + 'ms';
-        saveState();
-        console.log(`⚡ Typing speed set to: ${state.typingSpeed}ms`);
     });
 
     document.querySelectorAll('.option-item').forEach(item => {
@@ -1214,6 +1273,18 @@
         saveState();
     });
 
+    // ========== SPEED SLIDER ==========
+    const speedSlider = document.getElementById('typingSpeed');
+    const speedValue = document.getElementById('speedValue');
+    
+    speedSlider.addEventListener('input', function() {
+        state.typingSpeed = parseInt(this.value);
+        speedValue.textContent = state.typingSpeed + 'ms';
+        saveState();
+        console.log(`⚡ Typing speed set to: ${state.typingSpeed}ms`);
+    });
+
+    // ========== EXECUTOR ==========
     const textarea = document.getElementById('executorText');
     
     document.getElementById('clearBtn').addEventListener('click', () => {
@@ -1278,7 +1349,7 @@
         }
     });
 
-    // Drag functionality
+    // ========== DRAG FUNCTIONALITY ==========
     const headerDrag = menu.querySelector('.header');
     
     function startDrag(e) {
@@ -1333,7 +1404,7 @@
     document.addEventListener('touchmove', drag, { passive: false });
     document.addEventListener('touchend', stopDrag);
 
-    // Initial state
+    // ========== INIT ==========
     if (!state.allowPaste) {
         const pasteBtn = document.getElementById('pasteBtn');
         pasteBtn.disabled = true;
@@ -1343,5 +1414,11 @@
 
     updateHistoryTab();
 
-    console.log('AiCode Initialized');
+    console.log('✅ AiCode Initialized');
+    console.log('📊 Funções esperando chamada:');
+    console.log('  - window.__aiPasteHandler(data)');
+    console.log('  - window.__aiTextHandler(data)');
+    console.log('  - window.__aiAutoHandler(data)');
+    console.log('  - window.__aiGetState()');
+    console.log('📦 Estado atual:', window.__aiGetState());
 })();
