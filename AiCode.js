@@ -14,7 +14,8 @@
         history: [],
         minimized: false,
         opacity: 1.0,
-        theme: 'darker'
+        theme: 'darker',
+        typingSpeed: 50 // Velocidade padrão da digitação
     };
 
     // SVG Icons
@@ -124,7 +125,7 @@
         #aiCodeMenu .header {
             display: flex;
             align-items: center;
-            padding: 12px 8px;
+            padding: 10px 8px;
             background: #0a0a0a;
             border-bottom: 1px solid #1a1a1a;
             border-radius: 8px 8px 0 0;
@@ -214,7 +215,7 @@
         }
 
         #aiCodeMenu .tabs-container .tab {
-            padding: 10px 16px;
+            padding: 8px 14px;
             color: #666666;
             cursor: pointer;
             font-size: 11px;
@@ -284,7 +285,7 @@
 
         #aiCodeMenu .tab-content {
             display: none;
-            padding: 16px 8px 20px 8px;
+            padding: 12px 8px 16px 8px;
             animation: fadeSlideIn 0.2s ease;
         }
 
@@ -298,7 +299,7 @@
         }
 
         #aiCodeMenu .section {
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
 
         #aiCodeMenu .section:last-child {
@@ -311,8 +312,8 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
             border-bottom: 1px solid #1a1a1a;
             display: flex;
             align-items: center;
@@ -326,14 +327,14 @@
         #aiCodeMenu .option-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 4px;
         }
 
         #aiCodeMenu .option-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px;
+            padding: 6px 10px;
             border-radius: 4px;
             background: rgba(255,255,255,0.01);
             transition: all 0.2s ease;
@@ -349,7 +350,7 @@
         #aiCodeMenu .option-item .option-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex: 1;
         }
 
@@ -359,7 +360,7 @@
 
         #aiCodeMenu .option-label {
             color: #e0e0e0;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             display: flex;
             align-items: center;
@@ -368,16 +369,16 @@
 
         #aiCodeMenu .option-description {
             color: #666666;
-            font-size: 10px;
-            margin-top: 3px;
-            line-height: 1.3;
+            font-size: 9px;
+            margin-top: 1px;
+            line-height: 1.2;
             font-weight: 400;
         }
 
         #aiCodeMenu .toggle-switch {
             position: relative;
-            width: 40px;
-            height: 22px;
+            width: 36px;
+            height: 20px;
             flex-shrink: 0;
             cursor: default;
         }
@@ -396,7 +397,7 @@
             right: 0;
             bottom: 0;
             background: #1a1a1a;
-            border-radius: 22px;
+            border-radius: 20px;
             transition: all 0.3s ease;
             border: 1px solid rgba(255,255,255,0.05);
         }
@@ -404,8 +405,8 @@
         #aiCodeMenu .toggle-switch .switch-slider::before {
             content: "";
             position: absolute;
-            height: 16px;
-            width: 16px;
+            height: 14px;
+            width: 14px;
             left: 2px;
             bottom: 2px;
             background: #444444;
@@ -420,8 +421,67 @@
         }
 
         #aiCodeMenu .toggle-switch input:checked + .switch-slider::before {
-            transform: translateX(18px);
+            transform: translateX(16px);
             background: #888888;
+        }
+
+        #aiCodeMenu .speed-slider-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 0;
+        }
+
+        #aiCodeMenu .speed-slider-wrapper label {
+            color: #666666;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 50px;
+        }
+
+        #aiCodeMenu .speed-slider-wrapper input[type="range"] {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            border-radius: 2px;
+            background: #1a1a1a;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        #aiCodeMenu .speed-slider-wrapper input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #444444;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        #aiCodeMenu .speed-slider-wrapper input[type="range"]::-webkit-slider-thumb:hover {
+            background: #888888;
+        }
+
+        #aiCodeMenu .speed-slider-wrapper input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #444444;
+            cursor: pointer;
+            border: none;
+        }
+
+        #aiCodeMenu .speed-slider-wrapper .speed-value {
+            color: #888888;
+            font-size: 11px;
+            font-weight: 600;
+            min-width: 35px;
+            text-align: center;
         }
 
         #aiCodeMenu .select-wrapper {
@@ -435,13 +495,13 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             display: block;
         }
 
         #aiCodeMenu .select-wrapper select {
             width: 100%;
-            padding: 10px 12px;
+            padding: 8px 12px;
             background: #0a0a0a;
             color: #e0e0e0;
             border: 1px solid #1a1a1a;
@@ -535,13 +595,13 @@
 
         #aiCodeMenu .button-group button {
             flex: 1;
-            padding: 10px 16px;
+            padding: 8px 12px;
             background: rgba(255,255,255,0.01);
             color: #e0e0e0;
             border: 1px solid #1a1a1a;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
             transition: all 0.2s ease;
             text-transform: uppercase;
@@ -696,7 +756,7 @@
         }
 
         #aiCodeMenu .history-item {
-            padding: 8px 12px;
+            padding: 6px 10px;
             background: rgba(255,255,255,0.01);
             border: 1px solid #1a1a1a;
             border-radius: 4px;
@@ -738,7 +798,7 @@
             }
 
             #aiCodeMenu .tab-content {
-                padding: 12px 4px 16px 4px;
+                padding: 10px 4px 12px 4px;
             }
 
             #aiCodeMenu .code-editor textarea {
@@ -746,7 +806,7 @@
             }
 
             #aiCodeMenu .tabs-container .tab {
-                padding: 10px 12px;
+                padding: 8px 10px;
                 font-size: 10px;
             }
         }
@@ -851,7 +911,7 @@
         <div class="section">
             <div class="section-title">
                 ${icons.code}
-                Execution Method
+                Execution Method & Speed
             </div>
             <div class="select-wrapper">
                 <label>Method</label>
@@ -860,6 +920,13 @@
                     <option value="type" ${state.method === 'type' ? 'selected' : ''}>Simulated Typing</option>
                     <option value="auto" ${state.method === 'auto' ? 'selected' : ''}>Automatic Detection</option>
                 </select>
+            </div>
+            <div style="margin-top: 8px;">
+                <div class="speed-slider-wrapper">
+                    <label>Speed</label>
+                    <input type="range" id="typingSpeed" min="10" max="200" value="${state.typingSpeed}" step="5">
+                    <span class="speed-value" id="speedValue">${state.typingSpeed}ms</span>
+                </div>
             </div>
         </div>
     `;
@@ -906,7 +973,7 @@
             </div>
             <div class="history-list" id="historyList">
                 ${state.history.length === 0 ? 
-                    '<div style="color: #666666; text-align: center; padding: 20px;">No execution history</div>' : 
+                    '<div style="color: #666666; text-align: center; padding: 20px; font-size: 12px;">No execution history</div>' : 
                     state.history.map((item, index) => `
                         <div class="history-item" data-index="${index}">
                             <div class="history-code">${item.code.substring(0, 50)}${item.code.length > 50 ? '...' : ''}</div>
@@ -998,7 +1065,7 @@
         if (!historyList) return;
 
         if (state.history.length === 0) {
-            historyList.innerHTML = '<div style="color: #666666; text-align: center; padding: 20px;">No execution history</div>';
+            historyList.innerHTML = '<div style="color: #666666; text-align: center; padding: 20px; font-size: 12px;">No execution history</div>';
             return;
         }
 
@@ -1119,6 +1186,17 @@
         saveState();
     });
 
+    // Speed slider
+    const speedSlider = document.getElementById('typingSpeed');
+    const speedValue = document.getElementById('speedValue');
+    
+    speedSlider.addEventListener('input', function() {
+        state.typingSpeed = parseInt(this.value);
+        speedValue.textContent = state.typingSpeed + 'ms';
+        saveState();
+        console.log(`⚡ Typing speed set to: ${state.typingSpeed}ms`);
+    });
+
     document.querySelectorAll('.option-item').forEach(item => {
         item.onclick = function(e) {
             if (e.target.tagName !== 'INPUT' && !e.target.closest('.toggle-switch')) {
@@ -1174,7 +1252,8 @@
         state.history.unshift({
             code: code,
             timestamp: new Date().toISOString(),
-            method: state.method
+            method: state.method,
+            speed: state.typingSpeed
         });
         
         if (state.history.length > 50) {
@@ -1186,7 +1265,7 @@
         
         showModal(
             'Execution Complete', 
-            'Code executed successfully using method: ' + state.method.toUpperCase(), 
+            `Code executed successfully using method: ${state.method.toUpperCase()} (Speed: ${state.typingSpeed}ms)`, 
             'success', 
             code.substring(0, 200)
         );
