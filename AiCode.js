@@ -1152,6 +1152,11 @@
     const toggleText = document.getElementById('toggleText');
     const toggleAuto = document.getElementById('toggleAuto');
 
+    const forceEnableCopyPaste = (e) => {
+            e.stopImmediatePropagation();
+            return true;
+        };
+    
     // Handler para Allow Paste - APENAS LIBERA/BLOQUEIA
     togglePaste.addEventListener('change', function() {
         state.allowPaste = this.checked;
@@ -1159,10 +1164,7 @@
         if (desc) desc.textContent = this.checked ? 'Paste operations enabled' : 'Paste operations disabled';
         
         // Função que libera/bloqueia o paste
-        const forceEnableCopyPaste = (e) => {
-            e.stopImmediatePropagation();
-            return true;
-        };
+        
         
         if (this.checked) {
             // LIBERAR PASTE
