@@ -11,7 +11,8 @@
         isDragging: false,
         offsetX: 0,
         offsetY: 0,
-        history: [],
+        apiKeys: [], // Array de {name, key}
+        selectedApi: '', // Key selecionada atualmente
         minimized: false,
         opacity: 1.0,
         theme: 'darker',
@@ -33,7 +34,10 @@
         history: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 4V8L10.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
         warning: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L18 18H2L10 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="10" y1="8" x2="10" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="15" r="0.5" fill="currentColor"/></svg>`,
         enabled: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5" fill="currentColor"/></svg>`,
-        disabled: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>`
+        disabled: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>`,
+        key: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="5" cy="8" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M7.5 8H14M14 8L12 6M14 8L12 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+        save: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2V14H13V4L11 2H3Z" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M5 2V6H10V2M5 14V10H10V14" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>`,
+        link: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 10L10 6M4 12C2.5 10.5 2.5 8 4 6.5L6 4.5C7.5 3 10 3 11.5 4.5C13 6 13 8.5 11.5 10L10 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`
     };
 
     // Import Poppins font
@@ -42,7 +46,7 @@
     fontLink.rel = 'stylesheet';
     document.head.appendChild(fontLink);
 
-    // ========== CSS COMPLETO ==========
+    // ========== CSS COMPLETO COM STOKES E MELHORIAS ==========
     const style = document.createElement('style');
     style.textContent = `
         * {
@@ -62,14 +66,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #000000;
-            border: 1px solid #1a1a1a;
-            border-radius: 8px;
+            background: #0a0a0a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
             min-width: 440px;
             max-width: 520px;
             width: 95%;
             z-index: 999999;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03);
             font-family: 'Poppins', sans-serif !important;
             font-size: 13px;
             color: #e0e0e0;
@@ -92,7 +96,7 @@
         }
 
         #aiCodeMenu.minimized .header {
-            border-radius: 8px;
+            border-radius: 12px;
         }
 
         #aiCodeMenu.minimized .title-section,
@@ -107,7 +111,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             z-index: 999998;
             animation: fadeIn 0.2s ease;
         }
@@ -126,9 +130,9 @@
             display: flex;
             align-items: center;
             padding: 12px 8px;
-            background: #0a0a0a;
-            border-bottom: 1px solid #1a1a1a;
-            border-radius: 8px 8px 0 0;
+            background: rgba(255,255,255,0.01);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px 12px 0 0;
             flex-shrink: 0;
             cursor: move;
             gap: 12px;
@@ -136,7 +140,7 @@
 
         #aiCodeMenu.minimized .header {
             border-bottom: none;
-            border-radius: 8px;
+            border-radius: 12px;
         }
 
         #aiCodeMenu .header .window-controls {
@@ -159,25 +163,27 @@
             background: transparent;
             color: transparent;
             position: relative;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.05);
         }
 
         #aiCodeMenu .header .window-controls button:hover {
             color: rgba(255,255,255,0.8);
+            transform: scale(1.1);
         }
 
         #aiCodeMenu .header .window-controls .btn-close {
             background: #990000;
-            border: 1px solid #1a0000;
+            box-shadow: 0 0 0 1px rgba(255,0,0,0.2);
         }
 
         #aiCodeMenu .header .window-controls .btn-minimize {
             background: #664400;
-            border: 1px solid #1a1100;
+            box-shadow: 0 0 0 1px rgba(255,180,0,0.15);
         }
 
         #aiCodeMenu .header .window-controls .btn-maximize {
             background: #004400;
-            border: 1px solid #001a00;
+            box-shadow: 0 0 0 1px rgba(0,255,0,0.15);
         }
 
         #aiCodeMenu .header .title-section {
@@ -207,8 +213,8 @@
 
         #aiCodeMenu .tabs-container {
             display: flex;
-            background: #000000;
-            border-bottom: 1px solid #1a1a1a;
+            background: rgba(255,255,255,0.005);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
             padding: 0 8px;
             gap: 2px;
             flex-shrink: 0;
@@ -236,6 +242,7 @@
         #aiCodeMenu .tabs-container .tab svg {
             opacity: 0.4;
             transition: opacity 0.2s ease;
+            stroke-width: 1.5;
         }
 
         #aiCodeMenu .tabs-container .tab:hover {
@@ -260,8 +267,8 @@
         #aiCodeMenu .content {
             overflow-y: auto;
             flex: 1;
-            background: #000000;
-            border-radius: 0 0 8px 8px;
+            background: transparent;
+            border-radius: 0 0 12px 12px;
             max-height: calc(90vh - 120px);
             padding: 0 8px;
         }
@@ -275,12 +282,12 @@
         }
 
         #aiCodeMenu .content::-webkit-scrollbar-thumb {
-            background: #1a1a1a;
+            background: rgba(255,255,255,0.05);
             border-radius: 2px;
         }
 
         #aiCodeMenu .content::-webkit-scrollbar-thumb:hover {
-            background: #333333;
+            background: rgba(255,255,255,0.1);
         }
 
         #aiCodeMenu .tab-content {
@@ -300,6 +307,7 @@
 
         #aiCodeMenu .section {
             margin-bottom: 24px;
+            position: relative;
         }
 
         #aiCodeMenu .section:last-child {
@@ -307,14 +315,14 @@
         }
 
         #aiCodeMenu .section-title {
-            color: #666666;
+            color: #888888;
             font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             margin-bottom: 12px;
             padding-bottom: 8px;
-            border-bottom: 1px solid #1a1a1a;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -322,6 +330,7 @@
 
         #aiCodeMenu .section-title svg {
             opacity: 0.4;
+            stroke-width: 1.5;
         }
 
         #aiCodeMenu .option-group {
@@ -335,16 +344,17 @@
             align-items: center;
             justify-content: space-between;
             padding: 8px 12px;
-            border-radius: 4px;
+            border-radius: 6px;
             background: rgba(255,255,255,0.01);
             transition: all 0.2s ease;
-            border: 1px solid transparent;
+            border: 1px solid rgba(255,255,255,0.03);
             position: relative;
         }
 
         #aiCodeMenu .option-item:hover {
             background: rgba(255,255,255,0.02);
-            border-color: #1a1a1a;
+            border-color: rgba(255,255,255,0.06);
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.02);
         }
 
         #aiCodeMenu .option-item .option-left {
@@ -380,7 +390,7 @@
             width: 40px;
             height: 22px;
             flex-shrink: 0;
-            cursor: default;
+            cursor: pointer;
         }
 
         #aiCodeMenu .toggle-switch input {
@@ -396,10 +406,11 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: #1a1a1a;
+            background: rgba(255,255,255,0.03);
             border-radius: 22px;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
         }
 
         #aiCodeMenu .toggle-switch .switch-slider::before {
@@ -409,20 +420,22 @@
             width: 16px;
             left: 2px;
             bottom: 2px;
-            background: #444444;
+            background: #555555;
             border-radius: 50%;
             transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
         #aiCodeMenu .toggle-switch input:checked + .switch-slider {
-            background: #333333;
-            border-color: #444444;
-            box-shadow: 0 0 4px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3), 0 0 8px rgba(255,255,255,0.02);
         }
 
         #aiCodeMenu .toggle-switch input:checked + .switch-slider::before {
             transform: translateX(18px);
             background: #888888;
+            box-shadow: 0 0 6px rgba(255,255,255,0.1);
         }
 
         #aiCodeMenu .select-wrapper {
@@ -431,7 +444,7 @@
         }
 
         #aiCodeMenu .select-wrapper label {
-            color: #666666;
+            color: #888888;
             font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
@@ -443,10 +456,10 @@
         #aiCodeMenu .select-wrapper select {
             width: 100%;
             padding: 10px 12px;
-            background: #0a0a0a;
+            background: rgba(255,255,255,0.01);
             color: #e0e0e0;
-            border: 1px solid #1a1a1a;
-            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
             font-size: 12px;
             font-weight: 400;
             outline: none;
@@ -459,22 +472,188 @@
             padding-right: 32px;
             font-family: 'Poppins', sans-serif !important;
             transition: all 0.2s ease;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
         }
 
         #aiCodeMenu .select-wrapper select:hover {
-            background: #0d0d0d;
-            border-color: #333333;
+            background: rgba(255,255,255,0.015);
+            border-color: rgba(255,255,255,0.15);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.02);
         }
 
         #aiCodeMenu .select-wrapper select:focus {
-            border-color: #444444;
-            box-shadow: 0 0 0 2px rgba(255,255,255,0.02);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2), 0 0 0 2px rgba(255,255,255,0.02);
         }
 
         #aiCodeMenu .select-wrapper select option {
-            background: #000000;
+            background: #0a0a0a;
             color: #e0e0e0;
             font-family: 'Poppins', sans-serif !important;
+        }
+
+        #aiCodeMenu .api-input-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        #aiCodeMenu .api-input-wrapper label {
+            color: #888888;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        #aiCodeMenu .api-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        #aiCodeMenu .api-input-container input {
+            width: 100%;
+            padding: 10px 40px 10px 12px;
+            background: rgba(255,255,255,0.01);
+            color: #e0e0e0;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 400;
+            outline: none;
+            font-family: 'Poppins', sans-serif !important;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        #aiCodeMenu .api-input-container input::placeholder {
+            color: rgba(255,255,255,0.1);
+        }
+
+        #aiCodeMenu .api-input-container input:hover {
+            background: rgba(255,255,255,0.015);
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        #aiCodeMenu .api-input-container input:focus {
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2), 0 0 0 2px rgba(255,255,255,0.02);
+        }
+
+        #aiCodeMenu .api-paste-icon {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 4px;
+            color: #666666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            background: transparent;
+        }
+
+        #aiCodeMenu .api-paste-icon:hover {
+            color: #888888;
+            background: rgba(255,255,255,0.03);
+            border-color: rgba(255,255,255,0.08);
+            box-shadow: 0 0 6px rgba(255,255,255,0.02);
+        }
+
+        #aiCodeMenu .api-paste-icon svg {
+            pointer-events: none;
+        }
+
+        #aiCodeMenu .button-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        #aiCodeMenu .button-group button {
+            flex: 1;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.01);
+            color: #e0e0e0;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Poppins', sans-serif !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        #aiCodeMenu .button-group button:hover {
+            background: rgba(255,255,255,0.03);
+            border-color: rgba(255,255,255,0.15);
+            transform: translateY(-1px);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        #aiCodeMenu .button-group button:active {
+            transform: translateY(0);
+        }
+
+        #aiCodeMenu .button-group button.btn-primary {
+            background: rgba(255,255,255,0.03);
+            border-color: rgba(255,255,255,0.12);
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2), 0 0 8px rgba(255,255,255,0.01);
+        }
+
+        #aiCodeMenu .button-group button.btn-primary:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2), 0 0 16px rgba(255,255,255,0.03);
+        }
+
+        #aiCodeMenu .button-group button.btn-danger {
+            border-color: rgba(255,0,0,0.15);
+            color: #990000;
+        }
+
+        #aiCodeMenu .button-group button.btn-danger:hover {
+            background: rgba(255,0,0,0.05);
+            color: #cc0000;
+            border-color: rgba(255,0,0,0.25);
+        }
+
+        #aiCodeMenu .button-group button.btn-warning {
+            border-color: rgba(255,180,0,0.15);
+            color: #885500;
+        }
+
+        #aiCodeMenu .button-group button.btn-warning:hover {
+            background: rgba(255,180,0,0.05);
+            color: #aa6600;
+            border-color: rgba(255,180,0,0.25);
+        }
+
+        #aiCodeMenu .button-group button.btn-save {
+            border-color: rgba(0,255,0,0.15);
+            color: #005500;
+        }
+
+        #aiCodeMenu .button-group button.btn-save:hover {
+            background: rgba(0,255,0,0.05);
+            color: #007700;
+            border-color: rgba(0,255,0,0.25);
         }
 
         #aiCodeMenu .speed-slider-wrapper {
@@ -485,7 +664,7 @@
         }
 
         #aiCodeMenu .speed-slider-wrapper label {
-            color: #666666;
+            color: #888888;
             font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
@@ -499,9 +678,10 @@
             appearance: none;
             height: 4px;
             border-radius: 2px;
-            background: #1a1a1a;
+            background: rgba(255,255,255,0.04);
             outline: none;
             transition: all 0.2s ease;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
         }
 
         #aiCodeMenu .speed-slider-wrapper input[type="range"]::-webkit-slider-thumb {
@@ -510,22 +690,26 @@
             width: 14px;
             height: 14px;
             border-radius: 50%;
-            background: #444444;
+            background: #555555;
             cursor: pointer;
             transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
         #aiCodeMenu .speed-slider-wrapper input[type="range"]::-webkit-slider-thumb:hover {
             background: #888888;
+            box-shadow: 0 0 6px rgba(255,255,255,0.1);
         }
 
         #aiCodeMenu .speed-slider-wrapper input[type="range"]::-moz-range-thumb {
             width: 14px;
             height: 14px;
             border-radius: 50%;
-            background: #444444;
+            background: #555555;
             cursor: pointer;
-            border: none;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
         #aiCodeMenu .speed-slider-wrapper .speed-value {
@@ -538,24 +722,25 @@
 
         #aiCodeMenu .code-editor {
             position: relative;
-            background: #000000;
-            border-radius: 4px;
-            border: 1px solid #1a1a1a;
+            background: rgba(255,255,255,0.005);
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.08);
             overflow: hidden;
             transition: all 0.2s ease;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
         }
 
         #aiCodeMenu .code-editor:focus-within {
-            border-color: #444444;
-            box-shadow: 0 0 0 2px rgba(255,255,255,0.02);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2), 0 0 0 2px rgba(255,255,255,0.02);
         }
 
         #aiCodeMenu .code-editor .editor-header {
             padding: 6px 12px;
             background: rgba(255,255,255,0.01);
-            border-bottom: 1px solid #1a1a1a;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
             font-size: 10px;
-            color: #666666;
+            color: #888888;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
@@ -587,75 +772,6 @@
             font-family: 'Poppins', sans-serif !important;
         }
 
-        #aiCodeMenu .button-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        #aiCodeMenu .button-group button {
-            flex: 1;
-            padding: 10px 16px;
-            background: rgba(255,255,255,0.01);
-            color: #e0e0e0;
-            border: 1px solid #1a1a1a;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-family: 'Poppins', sans-serif !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        #aiCodeMenu .button-group button:hover {
-            background: rgba(255,255,255,0.03);
-            border-color: #333333;
-            transform: translateY(-1px);
-        }
-
-        #aiCodeMenu .button-group button:active {
-            transform: translateY(0);
-        }
-
-        #aiCodeMenu .button-group button.btn-primary {
-            background: #1a1a1a;
-            border-color: #333333;
-            color: #ffffff;
-            font-weight: 600;
-        }
-
-        #aiCodeMenu .button-group button.btn-primary:hover {
-            background: #2a2a2a;
-            border-color: #444444;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-
-        #aiCodeMenu .button-group button.btn-danger {
-            border-color: #330000;
-            color: #990000;
-        }
-
-        #aiCodeMenu .button-group button.btn-danger:hover {
-            background: #330000;
-            color: #cc0000;
-        }
-
-        #aiCodeMenu .button-group button.btn-warning {
-            border-color: #332200;
-            color: #885500;
-        }
-
-        #aiCodeMenu .button-group button.btn-warning:hover {
-            background: #332200;
-            color: #aa6600;
-        }
-
         #aiCodeMenu .modal-overlay {
             position: fixed;
             top: 0;
@@ -672,12 +788,12 @@
 
         #aiCodeMenu .modal {
             background: #0a0a0a;
-            border: 1px solid #1a1a1a;
-            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
             padding: 24px;
             max-width: 400px;
             width: 90%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03);
             animation: modalSlideIn 0.2s ease;
         }
 
@@ -692,7 +808,7 @@
             gap: 12px;
             margin-bottom: 16px;
             padding-bottom: 12px;
-            border-bottom: 1px solid #1a1a1a;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
         }
 
         #aiCodeMenu .modal .modal-title {
@@ -711,8 +827,8 @@
 
         #aiCodeMenu .modal .modal-body .code-block {
             background: rgba(0,0,0,0.5);
-            border: 1px solid #1a1a1a;
-            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 6px;
             padding: 12px;
             margin: 12px 0;
             font-family: 'Courier New', monospace !important;
@@ -729,9 +845,9 @@
 
         #aiCodeMenu .modal .modal-footer button {
             padding: 8px 20px;
-            background: #1a1a1a;
-            border: none;
-            border-radius: 4px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
             color: #ffffff;
             font-size: 11px;
             font-weight: 600;
@@ -743,49 +859,8 @@
         }
 
         #aiCodeMenu .modal .modal-footer button:hover {
-            background: #2a2a2a;
+            background: rgba(255,255,255,0.05);
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-
-        #aiCodeMenu .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        #aiCodeMenu .history-item {
-            padding: 8px 12px;
-            background: rgba(255,255,255,0.01);
-            border: 1px solid #1a1a1a;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-weight: 400;
-        }
-
-        #aiCodeMenu .history-item:hover {
-            background: rgba(255,255,255,0.02);
-            border-color: #444444;
-        }
-
-        #aiCodeMenu .history-item .history-code {
-            font-family: 'Courier New', monospace !important;
-            max-width: 300px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        #aiCodeMenu .history-item .history-time {
-            color: #666666;
-            font-size: 10px;
-            font-weight: 400;
         }
 
         @media (max-width: 480px) {
@@ -843,8 +918,8 @@
     
     const tabs = [
         { id: 'general', label: 'General', icon: icons.settings },
-        { id: 'executor', label: 'Executor', icon: icons.code },
-        { id: 'history', label: 'History', icon: icons.history }
+        { id: 'settings', label: 'Settings', icon: icons.key },
+        { id: 'executor', label: 'Executor', icon: icons.code }
     ];
 
     tabs.forEach((tab, index) => {
@@ -931,6 +1006,55 @@
         </div>
     `;
 
+    // Settings Tab (ANTIGA HISTORY)
+    const settingsContent = document.createElement('div');
+    settingsContent.className = 'tab-content';
+    settingsContent.dataset.tab = 'settings';
+    
+    // Gerar options do dropdown
+    const apiOptions = state.apiKeys.map(api => 
+        `<option value="${api.key}" ${state.selectedApi === api.key ? 'selected' : ''}>${api.name}</option>`
+    ).join('');
+    
+    settingsContent.innerHTML = `
+        <div class="section">
+            <div class="section-title">
+                ${icons.key}
+                API Configuration
+            </div>
+            <div class="api-input-wrapper">
+                <label>Add New API Key</label>
+                <div class="api-input-container">
+                    <input type="password" id="apiKeyInput" placeholder="sk-... or your API key" spellcheck="false">
+                    <div class="api-paste-icon" id="apiPasteIcon" title="Paste from popup">
+                        ${icons.paste}
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn-save" id="saveApiBtn">
+                    ${icons.save} Save API
+                </button>
+                <button class="btn-danger" id="removeApiBtn">
+                    ${icons.clear} Remove Selected
+                </button>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-title">
+                ${icons.dropdown}
+                Saved API Keys
+            </div>
+            <div class="select-wrapper">
+                <label>Select Active API</label>
+                <select id="apiSelect">
+                    <option value="" ${!state.selectedApi ? 'selected' : ''}>None selected</option>
+                    ${apiOptions}
+                </select>
+            </div>
+        </div>
+    `;
+
     // Executor Tab
     const executorContent = document.createElement('div');
     executorContent.className = 'tab-content';
@@ -961,33 +1085,9 @@
         </div>
     `;
 
-    // History Tab
-    const historyContent = document.createElement('div');
-    historyContent.className = 'tab-content';
-    historyContent.dataset.tab = 'history';
-    historyContent.innerHTML = `
-        <div class="section">
-            <div class="section-title">
-                ${icons.history}
-                Execution History
-            </div>
-            <div class="history-list" id="historyList">
-                ${state.history.length === 0 ? 
-                    '<div style="color: #666666; text-align: center; padding: 20px; font-size: 12px;">No execution history</div>' : 
-                    state.history.map((item, index) => `
-                        <div class="history-item" data-index="${index}">
-                            <div class="history-code">${item.code.substring(0, 50)}${item.code.length > 50 ? '...' : ''}</div>
-                            <div class="history-time">${new Date(item.timestamp).toLocaleTimeString()}</div>
-                        </div>
-                    `).join('')
-                }
-            </div>
-        </div>
-    `;
-
     content.appendChild(generalContent);
+    content.appendChild(settingsContent);
     content.appendChild(executorContent);
-    content.appendChild(historyContent);
 
     menu.appendChild(header);
     menu.appendChild(tabsContainer);
@@ -1060,36 +1160,32 @@
         });
     }
 
-    function updateHistoryTab() {
-        const historyList = document.getElementById('historyList');
-        if (!historyList) return;
-
-        if (state.history.length === 0) {
-            historyList.innerHTML = '<div style="color: #666666; text-align: center; padding: 20px; font-size: 12px;">No execution history</div>';
-            return;
+    function updateSettingsTab() {
+        const settingsTab = document.querySelector('[data-tab="settings"]');
+        if (!settingsTab || !settingsTab.classList.contains('active')) return;
+        
+        const apiOptions = state.apiKeys.map(api => 
+            `<option value="${api.key}" ${state.selectedApi === api.key ? 'selected' : ''}>${api.name}</option>`
+        ).join('');
+        
+        const apiSelect = document.getElementById('apiSelect');
+        if (apiSelect) {
+            apiSelect.innerHTML = `
+                <option value="" ${!state.selectedApi ? 'selected' : ''}>None selected</option>
+                ${apiOptions}
+            `;
         }
-
-        historyList.innerHTML = state.history.map((item, index) => `
-            <div class="history-item" data-index="${index}">
-                <div class="history-code">${item.code.substring(0, 50)}${item.code.length > 50 ? '...' : ''}</div>
-                <div class="history-time">${new Date(item.timestamp).toLocaleTimeString()}</div>
-            </div>
-        `).join('');
-
-        historyList.querySelectorAll('.history-item').forEach(item => {
-            item.onclick = function() {
-                const index = this.dataset.index;
-                const historyItem = state.history[index];
-                document.getElementById('executorText').value = historyItem.code;
-                switchTab('executor');
-                showModal('History Loaded', 'Code loaded from execution history.', 'success', historyItem.code.substring(0, 100));
-            };
-        });
     }
 
     function saveState() {
         try {
-            localStorage.setItem('aiCodeMenuState', JSON.stringify(state));
+            const saveData = { ...state };
+            // Mascara as keys antes de salvar (opcional, para segurança)
+            saveData.apiKeys = state.apiKeys.map(api => ({
+                name: api.name,
+                key: api.key
+            }));
+            localStorage.setItem('aiCodeMenuState', JSON.stringify(saveData));
         } catch (e) {
             console.warn('State save failed:', e);
         }
@@ -1101,9 +1197,13 @@
             if (saved) {
                 const parsed = JSON.parse(saved);
                 Object.assign(state, parsed);
+                if (!state.apiKeys) state.apiKeys = [];
+                if (!state.selectedApi) state.selectedApi = '';
             }
         } catch (e) {
             console.warn('State load failed:', e);
+            state.apiKeys = [];
+            state.selectedApi = '';
         }
     }
 
@@ -1144,7 +1244,12 @@
     };
 
     document.querySelectorAll('#aiCodeMenu .tab').forEach(tab => {
-        tab.onclick = () => switchTab(tab.dataset.tab);
+        tab.onclick = () => {
+            switchTab(tab.dataset.tab);
+            if (tab.dataset.tab === 'settings') {
+                updateSettingsTab();
+            }
+        };
     });
 
     // ========== TOGGLE HANDLERS ==========
@@ -1153,46 +1258,35 @@
     const toggleAuto = document.getElementById('toggleAuto');
 
     const forceEnableCopyPaste = (e) => {
-            e.stopImmediatePropagation();
-            return true;
-        };
-    
-    // Handler para Allow Paste - APENAS LIBERA/BLOQUEIA
+        e.stopImmediatePropagation();
+        return true;
+    };
+
     togglePaste.addEventListener('change', function() {
         state.allowPaste = this.checked;
         const desc = this.closest('.option-item').querySelector('.option-description');
         if (desc) desc.textContent = this.checked ? 'Paste operations enabled' : 'Paste operations disabled';
         
-        // Função que libera/bloqueia o paste
-        
-        
         if (this.checked) {
-            // LIBERAR PASTE
             ['paste', 'copy'].forEach(event => {
                 document.addEventListener(event, forceEnableCopyPaste, true);
             });
-            console.log('🔓 Copy/Paste: Liberado');
         } else {
-            // BLOQUEAR PASTE
             ['paste', 'copy'].forEach(event => {
                 document.removeEventListener(event, forceEnableCopyPaste, true);
             });
-            console.log('🔒 Copy/Paste: Bloqueado');
         }
         
         saveState();
     });
 
-    // Handler para Text Input - VAZIO
     toggleText.addEventListener('change', function() {
         state.textInput = this.checked;
         const desc = this.closest('.option-item').querySelector('.option-description');
         if (desc) desc.textContent = this.checked ? 'Text input mode active' : 'Text input mode inactive';
-        console.log(`📝 Text Input Mode: ${this.checked ? 'ATIVADO' : 'DESATIVADO'}`);
         saveState();
     });
 
-    // Handler para Auto Execution - VAZIO
     toggleAuto.addEventListener('change', function() {
         state.autoType = this.checked;
         if (state.autoType) {
@@ -1201,13 +1295,12 @@
         }
         const desc = this.closest('.option-item').querySelector('.option-description');
         if (desc) desc.textContent = this.checked ? 'Auto execution enabled' : 'Auto execution disabled';
-        console.log(`⚡ Auto Execution: ${this.checked ? 'ATIVADO' : 'DESATIVADO'}`);
         saveState();
     });
 
     document.querySelectorAll('.option-item').forEach(item => {
         item.onclick = function(e) {
-            if (e.target.tagName !== 'INPUT' && !e.target.closest('.toggle-switch')) {
+            if (e.target.tagName !== 'INPUT' && !e.target.closest('.toggle-switch') && !e.target.closest('button')) {
                 const checkbox = this.querySelector('input[type="checkbox"]');
                 if (checkbox) {
                     checkbox.checked = !checkbox.checked;
@@ -1222,6 +1315,80 @@
         saveState();
     });
 
+    // ========== API KEY HANDLERS ==========
+    document.getElementById('saveApiBtn').addEventListener('click', () => {
+        const input = document.getElementById('apiKeyInput');
+        const key = input.value.trim();
+        
+        if (!key) {
+            showModal('Error', 'Please enter an API key.', 'error');
+            return;
+        }
+        
+        // Gerar nome para a key (primeiros 8 caracteres + ...)
+        const name = key.length > 12 ? key.substring(0, 8) + '...' : key;
+        
+        // Verificar se já existe
+        const exists = state.apiKeys.find(api => api.key === key);
+        if (exists) {
+            showModal('Duplicate', 'This API key already exists in your saved keys.', 'error');
+            return;
+        }
+        
+        state.apiKeys.push({ name, key });
+        state.selectedApi = key;
+        
+        input.value = '';
+        updateSettingsTab();
+        saveState();
+        
+        showModal('API Saved', `API key "${name}" has been saved and selected.`, 'success');
+    });
+
+    document.getElementById('removeApiBtn').addEventListener('click', () => {
+        const select = document.getElementById('apiSelect');
+        const selectedKey = select.value;
+        
+        if (!selectedKey) {
+            showModal('Error', 'No API key selected to remove.', 'error');
+            return;
+        }
+        
+        state.apiKeys = state.apiKeys.filter(api => api.key !== selectedKey);
+        state.selectedApi = state.apiKeys.length > 0 ? state.apiKeys[0].key : '';
+        
+        updateSettingsTab();
+        saveState();
+        
+        showModal('Removed', 'API key has been removed.', 'success');
+    });
+
+    document.getElementById('apiSelect').addEventListener('change', function() {
+        state.selectedApi = this.value;
+        saveState();
+    });
+
+    // Handler para o ícone de colar
+    document.getElementById('apiPasteIcon').addEventListener('click', () => {
+        // Abrir popup do navegador
+        const popupValue = window.prompt('Paste your API key here:', '');
+        
+        if (popupValue && popupValue.trim()) {
+            const input = document.getElementById('apiKeyInput');
+            input.value = popupValue.trim();
+            
+            // Focus no input e mostrar o valor brevemente
+            input.focus();
+            
+            // Pequena animação de sucesso no ícone
+            const icon = document.getElementById('apiPasteIcon');
+            icon.style.color = '#00aa00';
+            setTimeout(() => {
+                icon.style.color = '';
+            }, 1000);
+        }
+    });
+
     // ========== SPEED SLIDER ==========
     const speedSlider = document.getElementById('typingSpeed');
     const speedValue = document.getElementById('speedValue');
@@ -1230,7 +1397,6 @@
         state.typingSpeed = parseInt(this.value);
         speedValue.textContent = state.typingSpeed + 'ms';
         saveState();
-        console.log(`⚡ Typing speed set to: ${state.typingSpeed}ms`);
     });
 
     // ========== EXECUTOR ==========
@@ -1269,26 +1435,14 @@
             return;
         }
         
-        state.history.unshift({
-            code: code,
-            timestamp: new Date().toISOString(),
-            method: state.method,
-            speed: state.typingSpeed
-        });
-        
-        if (state.history.length > 50) {
-            state.history = state.history.slice(0, 50);
-        }
-        
-        saveState();
-        updateHistoryTab();
-        
         showModal(
             'Execution Complete', 
-            `Code executed successfully using method: ${state.method.toUpperCase()} (Speed: ${state.typingSpeed}ms)`, 
+            `Code executed successfully using method: ${state.method.toUpperCase()} (Speed: ${state.typingSpeed}ms)${state.selectedApi ? ' with API: ' + state.selectedApi.substring(0, 8) + '...' : ''}`, 
             'success', 
             code.substring(0, 200)
         );
+        
+        saveState();
     });
 
     document.addEventListener('keydown', (e) => {
@@ -1361,8 +1515,20 @@
         pasteBtn.style.cursor = 'not-allowed';
     }
 
-    updateHistoryTab();
+    // Ativar paste se estava ativo
+    if (state.allowPaste) {
+        ['paste', 'copy'].forEach(event => {
+            document.addEventListener(event, forceEnableCopyPaste, true);
+        });
+    }
 
-    console.log('✅ AiCode Initialized');
-    console.log('📦 Estado atual:', state);
+    updateSettingsTab();
+
+    console.log('✅ AiCode Initialized - Settings Tab Added');
+    console.log('📦 Current state:', {
+        allowPaste: state.allowPaste,
+        method: state.method,
+        apiKeys: state.apiKeys.length,
+        selectedApi: state.selectedApi ? state.selectedApi.substring(0, 8) + '...' : 'none'
+    });
 })();
